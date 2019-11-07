@@ -14,7 +14,7 @@
     <string name="menu_contact">Contact</string>
     <string name="menu_rating">Rate the app</string>
     <string name="valoareLabel">Valoare:</string>
-    <string name="addVenitTitle">Adăugare venit</string>
+    <string name="addVenitTitle">Adaugă venit</string>
     <string name="addCheltuialaTitle">Adaugă cheltuială</string>
     <string name="categorieLabel">Categorie:</string>
     <string name="valutaLabel">Valută</string>
@@ -22,6 +22,10 @@
     <string name="cardLabel">Card</string>
     <string name="ok">ok</string>
     <string name="cancel">cancel</string>
+    <string name="titluProvizoriu">Titlu</string>
+    <string name="eur">EUR</string>
+    <string name="usd">USD</string>
+    <string name="ron">RON</string>
 
     //array de elemente pentru spinner cheltuieli
     <array name="elemCheltuieli">
@@ -31,5 +35,11 @@
         <item>Timp liber</item>
         <item>Taxe</item>
         <item>Educație</item>
+    </array>
+    <array name="elemVenituri">
+        <item>Salariu</item>
+        <item>Împrumuturi</item>
+        <item>Cadouri</item>
+        <item>Voucher</item>
     </array>
 </resources>

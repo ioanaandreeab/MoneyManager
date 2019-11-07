@@ -10,8 +10,6 @@
         android:supportsRtl="true"
         android:theme="@style/myTheme">
         <activity android:name=".OperatiuneActivity"></activity>
-        <activity android:name=".AdaugaCheltuialaActivity" />
-        <activity android:name=".AdaugaVenitActivity" />
         <activity
             android:name=".SplashScreen"
             android:theme="@style/SplashScreenTheme">
