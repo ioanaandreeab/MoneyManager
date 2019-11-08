@@ -26,6 +26,10 @@
     <string name="eur">EUR</string>
     <string name="usd">USD</string>
     <string name="ron">RON</string>
+    <string name="venituri">Venituri</string>
+    <string name="cheltuieli">Cheltuieli</string>
+    <string name="balanta">Balanță</string>
+    <string name="istoricTranzactiiTitle">Istoric tranzacții</string>
 
     //array de elemente pentru spinner cheltuieli
     <array name="elemCheltuieli">

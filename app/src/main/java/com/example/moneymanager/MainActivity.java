@@ -26,7 +26,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.view.Menu;
+import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -38,12 +43,56 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private boolean isOpen = false;
     private int requestCodeAdaugaVenit = 333;
     private int requestCodeAdaugaCheltuiala = 444;
+    private List<Object> tranzactii = new ArrayList<>();
+
 
     //functii pentru expandarea & colapsarea butoanelor
     public void hideBtns() {
         fab.hide();
         fabCheltuiala.hide();
         fabVenit.hide();
+    }
+
+    private void calcSum() {
+        double totalVenituri = 0;
+        double totalCheltuieli = 0;
+        double balanta = 0;
+        for(Object tranzactie : tranzactii){
+            if(tranzactie instanceof Cheltuiala)
+                totalCheltuieli += ((Cheltuiala) tranzactie).getValoare();
+            else if (tranzactie instanceof Venit)
+                totalVenituri += ((Venit) tranzactie).getValoare();
+        }
+        balanta = totalVenituri - totalCheltuieli;
+        TextView venituri = findViewById(R.id.venitVal);
+        venituri.setText(Double.toString(totalVenituri));
+
+        TextView cheltuieli = findViewById(R.id.cheltuieliVal);
+        cheltuieli.setText(Double.toString(totalCheltuieli));
+
+        TextView balantaTV = findViewById(R.id.balantaVal);
+        balantaTV.setText(Double.toString(balanta));
+    }
+
+    private void initLV() {
+
+        tranzactii.add(new Cheltuiala(20,"Mâncare","07.11.2019","RON","Cash"));
+        tranzactii.add(new Cheltuiala(80,"Mâncare","07.11.2019","RON","Cash"));
+        tranzactii.add(new Venit(1000,"Salariu","07.11.2019","RON","Cash"));
+        tranzactii.add(new Cheltuiala(70,"Mâncare","07.11.2019","RON","Cash"));
+        tranzactii.add(new Cheltuiala(30,"Mâncare","07.11.2019","RON","Card"));
+        tranzactii.add(new Venit(100,"Împrumut","07.11.2019","RON","Cash"));
+    }
+
+    private void populateLV() {
+        if(tranzactii.size()==0){
+            initLV();
+        }
+        ListView lv = findViewById(R.id.listViewTranzactii);
+        lv.invalidate();
+        TranzactieAdapter adapter = new TranzactieAdapter(this,R.layout.tranzactie_layout,tranzactii);
+        lv.setAdapter(adapter);
+        calcSum();
     }
 
     private void showFabs(){
@@ -61,12 +110,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, new HomeFragment()).commit();
         fab = findViewById(R.id.fab);
         fabVenit = findViewById(R.id.fab_venit);
         fabCheltuiala = findViewById(R.id.fab_cheltuiala);
         configNavigation();
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        //initLV();
+        populateLV();
+    }
+
     private void configNavigation() {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -110,7 +167,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                //primesc venitul
                Intent it = getIntent();
                Venit venit = data.getParcelableExtra("venit");
-               Toast.makeText(this, venit.toString(), Toast.LENGTH_LONG).show();
+               //Toast.makeText(this, venit.toString(), Toast.LENGTH_LONG).show();
+               tranzactii.add(venit);
+               populateLV();
            }
         }
         else if(requestCode == requestCodeAdaugaCheltuiala){
@@ -118,7 +177,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 //primesc cheltuiala
                 Intent it = getIntent();
                 Cheltuiala cheltuiala = data.getParcelableExtra("cheltuiala");
-                Toast.makeText(this, cheltuiala.toString(), Toast.LENGTH_LONG).show();
+                //Toast.makeText(this, cheltuiala.toString(), Toast.LENGTH_LONG).show();
+                tranzactii.add(cheltuiala);
+                populateLV();
             }
         }
     }
@@ -127,7 +188,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch(menuItem.getItemId()) {
             case R.id.nav_home:
-                getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, new MessageFragment()).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, new HomeFragment()).commit();
+                onStart();
                 break;
         }
         drawerLayout.closeDrawer(GravityCompat.START);
