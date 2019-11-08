@@ -53,6 +53,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         fabVenit.hide();
     }
 
+    private void showBtns() {
+        fab.show();
+        fabCheltuiala.show();
+        fabVenit.show();
+    }
+
     private void calcSum() {
         double totalVenituri = 0;
         double totalCheltuieli = 0;
@@ -190,6 +196,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_home:
                 getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, new HomeFragment()).commit();
                 onStart();
+                showBtns();
+                break;
+            case R.id.nav_chart:
+                getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, new ChartFragment()).commit();
+                hideBtns();
                 break;
         }
         drawerLayout.closeDrawer(GravityCompat.START);
