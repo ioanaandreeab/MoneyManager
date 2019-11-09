@@ -20,7 +20,7 @@
     <string name="valutaLabel">Valută</string>
     <string name="cashLabel">Cash</string>
     <string name="cardLabel">Card</string>
-    <string name="ok">ok</string>
+    <string name="ok">OK</string>
     <string name="cancel">cancel</string>
     <string name="titluProvizoriu">Titlu</string>
     <string name="eur">EUR</string>
@@ -34,6 +34,7 @@
     <string name="mail">Mail:</string>
     <string name="parola">Parolă:</string>
     <string name="login">Login</string>
+    <string name="textProvizoriu">Content to be done</string>
 
     //array de elemente pentru spinner cheltuieli
     <array name="elemCheltuieli">
@@ -50,4 +51,8 @@
         <item>Cadouri</item>
         <item>Voucher</item>
     </array>
+    <string name="title_activity_categorii">CategoriiActivity</string>
+    <string name="tab_text_1">Tab 1</string>
+    <string name="tab_text_2">Tab 2</string>
+    <string name="adauga_categorie">ADAUGĂ CATEGORIE</string>
 </resources>

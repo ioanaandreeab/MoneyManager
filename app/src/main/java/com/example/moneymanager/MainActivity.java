@@ -30,6 +30,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.net.Inet4Address;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -202,6 +203,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, new ChartFragment()).commit();
                 hideBtns();
                 break;
+            case R.id.nav_categ:
+                Intent it = new Intent(getApplicationContext(),CategoriiActivity.class);
+                startActivity(it);
         }
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
