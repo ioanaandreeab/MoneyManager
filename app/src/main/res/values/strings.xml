@@ -55,4 +55,10 @@
     <string name="tab_text_1">Tab 1</string>
     <string name="tab_text_2">Tab 2</string>
     <string name="adauga_categorie">ADAUGĂ CATEGORIE</string>
+    <string name="nume_categorie">Nume categorie:</string>
+    <string name="titleAddVen">Adaugă categorie venit</string>
+    <string name="addCheltTitle">Adaugă categorie cheltuială</string>
+    <string name="questionRating">Îți place să folosești aplicația?</string>
+    <string name="adauga_detalii_label">Adaugă detalii</string>
+    <string name="adauga_feedback">Adaugă feedback</string>
 </resources>

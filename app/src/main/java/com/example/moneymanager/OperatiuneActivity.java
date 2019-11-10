@@ -50,6 +50,7 @@ public class OperatiuneActivity extends AppCompatActivity {
             spinner.setAdapter(spinnerAdapter);
         }
 
+        //handler pentru click pe butonul de adauga
         Button okBtn = findViewById(R.id.BtnIdOK);
         okBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -117,7 +118,7 @@ public class OperatiuneActivity extends AppCompatActivity {
         RadioButton rbNatura = findViewById(rgNatura.getCheckedRadioButtonId());
         String natura = rbNatura.getText().toString();
 
-        //creare obiect cheltuiala
+        //creare obiect venit
         Venit venit = new Venit(valoare,categorie,data,valuta,natura);
         intent.putExtra("venit",venit);
         setResult(RESULT_OK, intent);

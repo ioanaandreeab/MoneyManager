@@ -20,19 +20,13 @@
             android:id="@+id/nav_export"
             android:icon="@drawable/ic_save"
             android:title="@string/menu_export" />
+        <item
+            android:id="@+id/nav_contact"
+            android:icon="@drawable/ic_location"
+            android:title="@string/menu_contact" />
+        <item
+            android:id="@+id/nav_rate"
+            android:icon="@drawable/ic_star"
+            android:title="@string/menu_rating" />
     </group>
-
-    <item android:title="More">
-        <menu>
-            <item
-                android:id="@+id/nav_contact"
-                android:icon="@drawable/ic_location"
-                android:title="@string/menu_contact" />
-            <item
-                android:id="@+id/nav_rate"
-                android:icon="@drawable/ic_star"
-                android:title="@string/menu_rating" />
-        </menu>
-    </item>
-
 </menu>

@@ -12,6 +12,7 @@ public class PageAdapter extends FragmentPagerAdapter {
     private final List<Fragment> fragmentList = new ArrayList<>();
     private final List<String> fragmentTitleList = new ArrayList<>();
 
+    //adapterul se foloseste de fragment & titlul ce va fi afisat in tab
     public void addFragment(Fragment fragment, String fragmentTitle){
         fragmentTitleList.add(fragmentTitle);
         fragmentList.add(fragment);

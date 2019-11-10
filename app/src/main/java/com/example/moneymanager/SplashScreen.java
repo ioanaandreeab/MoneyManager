@@ -12,6 +12,8 @@ public class SplashScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
 
+        //splash screenul este afisat o secunda, prin intermediul unui thread care "doarme"
+        //ulterior, portneste urmatoarea activitate - login
         Thread myThread = new Thread(){
             @Override
             public void run() {

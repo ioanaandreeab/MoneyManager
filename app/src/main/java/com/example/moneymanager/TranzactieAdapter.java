@@ -23,6 +23,7 @@ public class TranzactieAdapter extends ArrayAdapter<Object> {
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+        //object deoarece cheltuiala si venit sunt doua clase diferite, derivate din object -- maybe to be modified
         Object o = getItem(position);
         LayoutInflater inflater = LayoutInflater.from(getContext());
         View v = inflater.inflate(resursaID,null);
@@ -33,6 +34,7 @@ public class TranzactieAdapter extends ArrayAdapter<Object> {
         TextView natTranzactie = v.findViewById(R.id.naturaTranz);
         ImageView imgTranzactie = v.findViewById(R.id.imgTranz);
 
+        //prelucrari in functie de tipul tranzactiei
         if(o instanceof Cheltuiala) {
             categorieTranzactie.setText(((Cheltuiala) o).getCategorie());
             dataTranzactie.setText(((Cheltuiala) o).getData());

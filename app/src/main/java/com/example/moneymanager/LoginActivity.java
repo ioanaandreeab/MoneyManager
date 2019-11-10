@@ -17,6 +17,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
     }
 
+    //pentru moment doar se verifica niste date hardcodate
     public void checkLogin(View view) {
         EditText ETmail = findViewById(R.id.mailLogin);
         String mail = ETmail.getText().toString();
