@@ -20,4 +20,4 @@
  - **Contact** - integrare Google Maps - urmează a fi implementată în următoarele faze
  - **Rate the app** 
 	 - posibilitate rating & introducere feedback; 
-	 - la apăsarea butonului se va afișa un toast cu datele completate
+	 - la apăsarea butonului se va afișa un toast cu datele completate 
