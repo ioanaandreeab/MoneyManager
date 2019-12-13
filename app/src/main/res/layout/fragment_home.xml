@@ -6,96 +6,119 @@
     android:layout_height="match_parent"
     android:layout_marginLeft="@dimen/fab_margin"
     android:layout_marginRight="@dimen/fab_margin">
-    <!--Dashboard title-->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/menu_home"
-            android:gravity="start"
-            android:textStyle="bold"
-            android:textSize="@dimen/titleSize">
-        </TextView>
+  <!--Dashboard title-->
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      android:layout_marginTop="@dimen/fab_55"
+      android:background="@drawable/background">
+  <TextView
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="@string/menu_home"
+      android:gravity="start"
+      android:textStyle="bold"
+      android:textSize="@dimen/titleSize"
+      android:textAlignment="center"
+      android:textColor="@android:color/white">
+  </TextView>
 
-    <!--Stats titles-->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/venituri"
-                android:layout_weight="1"
-                android:textAlignment="center">
-            </TextView>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/cheltuieli"
-                android:textAlignment="center"
-                android:layout_weight="1">
-            </TextView>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/balanta"
-                android:textAlignment="center"
-                android:layout_weight="1">
-            </TextView>
-        </LinearLayout>
-
-    <!--separator-->
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@android:color/darker_gray"/>
-
-    <!--Stats values-->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="test"
-            android:id="@+id/venitVal"
-            android:layout_weight="1"
-            android:textAlignment="center">
-        </TextView>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="test"
-            android:id="@+id/cheltuieliVal"
-            android:layout_weight="1"
-            android:textAlignment="center">
-        </TextView>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/balantaVal"
-            android:text="test"
-            android:layout_weight="1"
-            android:textAlignment="center">
-        </TextView>
-    </LinearLayout>
-
-    <!--Dashboard title-->
+  <!--Stats titles-->
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal">
     <TextView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/istoricTranzactiiTitle"
-        android:gravity="start"
-        android:textStyle="bold"
-        android:textSize="@dimen/titleSize">
+        android:text="@string/venituri"
+        android:layout_weight="1"
+        android:textAlignment="center"
+        android:textColor="@android:color/white">
     </TextView>
-
-    <!--list w/ transactions-->
-    <ListView
-        android:layout_width="match_parent"
+    <TextView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/listViewTranzactii">
-    </ListView>
+        android:text="@string/cheltuieli"
+        android:textAlignment="center"
+        android:layout_weight="1"
+        android:textColor="@android:color/white">
+    </TextView>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/balanta"
+        android:textAlignment="center"
+        android:layout_weight="1"
+        android:textColor="@android:color/white">
+    </TextView>
+  </LinearLayout>
 
+  <!--separator-->
+  <View
+      android:layout_width="match_parent"
+      android:layout_height="1dp"
+      android:background="@android:color/darker_gray"/>
+
+  <!--Stats values-->
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="test"
+        android:id="@+id/venitVal"
+        android:layout_weight="1"
+        android:textAlignment="center"
+        android:textColor="@android:color/white">
+    </TextView>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="test"
+        android:id="@+id/cheltuieliVal"
+        android:layout_weight="1"
+        android:textAlignment="center"
+        android:textColor="@android:color/white">
+    </TextView>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/balantaVal"
+        android:text="test"
+        android:layout_weight="1"
+        android:textAlignment="center"
+        android:textColor="@android:color/white">
+    </TextView>
+  </LinearLayout>
+  </LinearLayout>
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      android:background="@drawable/background"
+      android:layout_marginTop="@dimen/fab_55">
+  <!--Dashboard title-->
+  <TextView
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="@string/istoricTranzactiiTitle"
+      android:gravity="start"
+      android:textStyle="bold"
+      android:textSize="@dimen/titleSize"
+      android:textColor="@android:color/white"
+      android:textAlignment="center">
+  </TextView>
+
+  <!--list w/ transactions-->
+  <ListView
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:id="@+id/listViewTranzactii">
+  </ListView>
+  </LinearLayout>
 </LinearLayout>

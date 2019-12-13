@@ -13,9 +13,9 @@ import androidx.annotation.Nullable;
 
 import java.util.List;
 
-public class TranzactieAdapter extends ArrayAdapter<Object> {
+public class TranzactieAdapter extends ArrayAdapter<Tranzactie> {
     private int resursaID;
-    public TranzactieAdapter(@NonNull Context context, int resource, @NonNull List<Object> objects) {
+    public TranzactieAdapter(@NonNull Context context, int resource, @NonNull List<Tranzactie> objects) {
         super(context, resource, objects);
         resursaID = resource;
     }
@@ -24,7 +24,7 @@ public class TranzactieAdapter extends ArrayAdapter<Object> {
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         //object deoarece cheltuiala si venit sunt doua clase diferite, derivate din object -- maybe to be modified
-        Object o = getItem(position);
+        Tranzactie tranzactie = getItem(position);
         LayoutInflater inflater = LayoutInflater.from(getContext());
         View v = inflater.inflate(resursaID,null);
         //am obtinut view-ul si il populez
@@ -34,21 +34,17 @@ public class TranzactieAdapter extends ArrayAdapter<Object> {
         TextView natTranzactie = v.findViewById(R.id.naturaTranz);
         ImageView imgTranzactie = v.findViewById(R.id.imgTranz);
 
+        //punem campurile
+        categorieTranzactie.setText(tranzactie.getCategorie());
+        dataTranzactie.setText(tranzactie.getData());
+        valTranzactie.setText(Double.toString(tranzactie.getValoare()));
+        natTranzactie.setText(tranzactie.getNatura());
+
         //prelucrari in functie de tipul tranzactiei
-        if(o instanceof Cheltuiala) {
-            categorieTranzactie.setText(((Cheltuiala) o).getCategorie());
-            dataTranzactie.setText(((Cheltuiala) o).getData());
-            valTranzactie.setText(Double.toString(((Cheltuiala) o).getValoare()));
-            natTranzactie.setText(((Cheltuiala) o).getNaturaTranzactie());
+        if(tranzactie.isEsteAditiva() == false)
             imgTranzactie.setImageResource(R.drawable.ic_remove_circle_red);
-        }
-        else if (o instanceof Venit) {
-            categorieTranzactie.setText(((Venit) o).getCategorie());
-            dataTranzactie.setText(((Venit) o).getData());
-            valTranzactie.setText(Double.toString(((Venit) o).getValoare()));
-            natTranzactie.setText(((Venit) o).getNaturaTranzactie());
+        else
             imgTranzactie.setImageResource(R.drawable.ic_add_circle_green);
-        }
         return v;
     }
 }

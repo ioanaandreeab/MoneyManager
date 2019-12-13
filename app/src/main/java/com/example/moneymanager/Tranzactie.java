@@ -1,16 +1,21 @@
 package com.example.moneymanager;
 
+import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.annotation.RequiresApi;
+
 public class Tranzactie implements Parcelable {
+    private int id;
     private double valoare;
     private String data;
     private String natura;
     private String categorie;
     private boolean esteAditiva;
 
-    public Tranzactie(double valoare, String data, String natura, String categorie, boolean esteAditiva) {
+    public Tranzactie(int id, double valoare, String data, String natura, String categorie, boolean esteAditiva) {
+        this.id = id;
         this.valoare = valoare;
         this.data = data;
         this.natura = natura;
@@ -19,6 +24,7 @@ public class Tranzactie implements Parcelable {
     }
 
     protected Tranzactie(Parcel in) {
+        id = in.readInt();
         valoare = in.readDouble();
         data = in.readString();
         natura = in.readString();
@@ -37,6 +43,14 @@ public class Tranzactie implements Parcelable {
             return new Tranzactie[size];
         }
     };
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public double getValoare() {
         return valoare;
@@ -95,12 +109,14 @@ public class Tranzactie implements Parcelable {
         return 0;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.Q) //pentru writeBoolean
     @Override
     public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeInt(id);
         parcel.writeDouble(valoare);
-        parcel.writeString(categorie);
         parcel.writeString(data);
         parcel.writeString(natura);
+        parcel.writeString(categorie);
         parcel.writeBoolean(esteAditiva);
     }
 }

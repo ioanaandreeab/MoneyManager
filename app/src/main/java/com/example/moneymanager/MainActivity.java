@@ -6,13 +6,16 @@ import android.os.Bundle;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.view.GravityCompat;
+import androidx.core.view.MenuItemCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -26,12 +29,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.view.Menu;
+import android.widget.AdapterView;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RatingBar;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.InputStream;
 import java.net.Inet4Address;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,9 +52,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private boolean isOpen = false;
     private int requestCodeAdaugaVenit = 333;
     private int requestCodeAdaugaCheltuiala = 444;
-    private List<Object> tranzactii = new ArrayList<>();
+    private int requestCodeEdit = 555;
+    private List<Tranzactie> tranzactii = new ArrayList<>();
     ListView lv;
-
+    SharedPref sharedPref;
 
     //functii privind comportamentul fabs
     public void hideBtns() {
@@ -79,11 +87,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         double totalVenituri = 0;
         double totalCheltuieli = 0;
         double balanta = 0;
-        for(Object tranzactie : tranzactii){
-            if(tranzactie instanceof Cheltuiala)
-                totalCheltuieli += ((Cheltuiala) tranzactie).getValoare();
-            else if (tranzactie instanceof Venit)
-                totalVenituri += ((Venit) tranzactie).getValoare();
+        for(Tranzactie tranzactie : tranzactii){
+            if(tranzactie.isEsteAditiva() == false)
+                totalCheltuieli += tranzactie.getValoare();
+            else
+                totalVenituri += tranzactie.getValoare();
         }
         balanta = totalVenituri - totalCheltuieli;
         TextView venituri = findViewById(R.id.venitVal);
@@ -98,12 +106,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     //initializare cu date hardcodate a listei
     private void initLV() {
-        tranzactii.add(new Cheltuiala(20,"Mâncare","07.11.2019","RON","Cash"));
-        tranzactii.add(new Cheltuiala(80,"Mâncare","07.11.2019","RON","Cash"));
-        tranzactii.add(new Venit(1000,"Salariu","07.11.2019","RON","Cash"));
-        tranzactii.add(new Cheltuiala(70,"Mâncare","07.11.2019","RON","Cash"));
-        tranzactii.add(new Cheltuiala(30,"Mâncare","07.11.2019","RON","Card"));
-        tranzactii.add(new Venit(100,"Împrumut","07.11.2019","RON","Cash"));
+        tranzactii.add(new Tranzactie(1,20,"07.11.2019","Cash","Mâncare",false));
+        tranzactii.add(new Tranzactie(2,80,"07.11.2019","Card","Mâncare",false));
+        tranzactii.add(new Tranzactie(3,1000,"07.11.2019","Cash","Salariu",true));
+        tranzactii.add(new Tranzactie(4,70,"07.11.2019","Card","Mâncare",false));
+        tranzactii.add(new Tranzactie(5,30,"07.11.2019","Card","Mâncare",false));
+        tranzactii.add(new Tranzactie(6,100,"07.11.2019","Cash","Împrumut",true));
     }
 
     //popularea listview-ului
@@ -116,8 +124,43 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         calcSum();
     }
 
+    //adauga meniul pentru darkmode
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.menu_darkmode,menu);
+        return true;
+    }
+
+    //handler element selectat din meniul pentru dark mode
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId()==R.id.item_darkmodeOn){
+            sharedPref.setDarkMode(true);
+            restartApp();
+        }
+        else if (item.getItemId() ==R.id.item_darkmodeOff) {
+            sharedPref.setDarkMode(false);
+            restartApp();
+        }
+        return true;
+    }
+    //pentru a aplica dark mode
+    public void restartApp() {
+        Intent it = new Intent(getApplicationContext(),MainActivity.class);
+        startActivity(it);
+        finish();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //dark mode before onCreate
+        sharedPref = new SharedPref(this);
+        if(sharedPref.loadDarkModeState()==true) {
+            setTheme(R.style.myDarkModeTheme);
+        }
+        else setTheme(R.style.myTheme);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, new HomeFragment()).commit();
@@ -133,6 +176,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onStart();
         lv = findViewById(R.id.listViewTranzactii);
         populateLV();
+        //la actiunea de long click se deschide formular cu elementul selectat pentru a putea fi editat
+        lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent it = new Intent(getApplicationContext(),OperatiuneActivity.class);
+                it.putExtra("edit",tranzactii.get(i)); //se trimite elementul de pe pozitia selectata
+                it.putExtra("pozitie",i);
+                startActivityForResult(it,requestCodeEdit);
+                return true;
+            }
+        });
     }
 
     //configurarea meniului
@@ -180,7 +234,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if(requestCode==requestCodeAdaugaVenit){
            if(resultCode == RESULT_OK) {
                //primesc venitul
-               Venit venit = data.getParcelableExtra("venit");
+               Tranzactie venit = data.getParcelableExtra("venit");
+               Toast.makeText(this,venit.toString(),Toast.LENGTH_LONG).show();
                tranzactii.add(venit);
                lv.invalidate();
                populateLV();
@@ -189,10 +244,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         else if(requestCode == requestCodeAdaugaCheltuiala){
             if(resultCode == RESULT_OK) {
                 //primesc cheltuiala
-                Cheltuiala cheltuiala = data.getParcelableExtra("cheltuiala");
+                Tranzactie cheltuiala = data.getParcelableExtra("cheltuiala");
                 tranzactii.add(cheltuiala);
                 lv.invalidate();
                 populateLV();
+            }
+        }
+        else if(requestCode == requestCodeEdit){
+            if(resultCode == RESULT_OK) {
+                Tranzactie tranzactie = data.getParcelableExtra("editat");
+                for (Tranzactie tranz: tranzactii) {
+                    if (tranz.getId() == tranzactie.getId())
+                        tranz=tranzactie;
+                }
             }
         }
     }
@@ -220,7 +284,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             //pentru restul sectiunilor ce vor fi implementate in fazele urmatoare afisez un mesaj ce se afla in acelasi fragment
                 default:
-                    getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, new ChartFragment()).commit();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, new HomeFragment()).commit();
+                    onStart();
                     hideBtns();
                     break;
         }

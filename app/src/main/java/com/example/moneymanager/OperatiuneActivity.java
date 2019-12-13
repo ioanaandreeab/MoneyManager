@@ -27,12 +27,15 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 public class OperatiuneActivity extends AppCompatActivity {
     Intent intent;
     String tip;
+    Tranzactie deEditat;
+    int pozitieDeEditat;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,36 +44,86 @@ public class OperatiuneActivity extends AppCompatActivity {
         tip = intent.getStringExtra("tip");
 
         //prelucrari in functie de datele ce trebuie afisate pe formular
-        if(tip.equals("adaugaCheltuiala")){
-            TextView title = (TextView)findViewById(R.id.Title);
-            title.setText(R.string.addCheltuialaTitle);
-            Spinner spinner = (Spinner)findViewById(R.id.spinnerSelect);
-            ArrayAdapter<String> spinnerAdapter =
-                    new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item,
-                            getResources().getStringArray(R.array.elemCheltuieli));
-            spinner.setAdapter(spinnerAdapter);
-        }
-        else if(tip.equals("adaugaVenit")) {
-            TextView title = (TextView)findViewById(R.id.Title);
-            title.setText(R.string.addVenitTitle);
-            Spinner spinner = (Spinner)findViewById(R.id.spinnerSelect);
-            ArrayAdapter<String> spinnerAdapter =
-                    new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item,
-                            getResources().getStringArray(R.array.elemVenituri));
-            spinner.setAdapter(spinnerAdapter);
+        if(tip != null) {
+            if (tip.equals("adaugaCheltuiala")) {
+                TextView title = (TextView) findViewById(R.id.Title);
+                title.setText(R.string.addCheltuialaTitle);
+                Spinner spinner = (Spinner) findViewById(R.id.spinnerSelect);
+                ArrayAdapter<String> spinnerAdapter =
+                        new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item,
+                                getResources().getStringArray(R.array.elemCheltuieli));
+                spinner.setAdapter(spinnerAdapter);
+            } else if (tip.equals("adaugaVenit")) {
+                TextView title = (TextView) findViewById(R.id.Title);
+                title.setText(R.string.addVenitTitle);
+                Spinner spinner = (Spinner) findViewById(R.id.spinnerSelect);
+                ArrayAdapter<String> spinnerAdapter =
+                        new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item,
+                                getResources().getStringArray(R.array.elemVenituri));
+                spinner.setAdapter(spinnerAdapter);
+            }
+
+            //handler pentru click pe butonul de adauga
+            Button okBtn = findViewById(R.id.BtnIdOK);
+            okBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(tip.equals("adaugaCheltuiala"))
+                        adaugaCheltuiala(v);
+                    else if(tip.equals("adaugaVenit"))
+                        adaugaVenit(v);
+                }
+            });
         }
 
-        //handler pentru click pe butonul de adauga
-        Button okBtn = findViewById(R.id.BtnIdOK);
-        okBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(tip.equals("adaugaCheltuiala"))
-                    adaugaCheltuiala(v);
-                else if(tip.equals("adaugaVenit"))
-                    adaugaVenit(v);
+        //s-a trimis activitatea pentru editare
+        else {
+            TextView title = (TextView)findViewById(R.id.Title);
+            title.setText(R.string.editTranzactie);
+            deEditat = intent.getParcelableExtra("edit");
+
+            //setam categoria selectata in spinner
+            Spinner spinner = (Spinner) findViewById(R.id.spinnerSelect);
+            ArrayAdapter<String> spinnerAdapter;
+            if (deEditat.isEsteAditiva()==false) {
+                spinnerAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item,
+                                getResources().getStringArray(R.array.elemCheltuieli));
+                spinner.setAdapter(spinnerAdapter);
             }
-        });
+            else {
+                spinnerAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item,
+                                getResources().getStringArray(R.array.elemVenituri));
+                spinner.setAdapter(spinnerAdapter);
+            }
+            int categPosition = spinnerAdapter.getPosition(deEditat.getCategorie());
+            spinner.setSelection(categPosition);
+
+            ((EditText)findViewById(R.id.ETvaloare)).setText(String.valueOf(deEditat.getValoare()));
+            if(deEditat.getNatura().equals("Cash"))
+                ((RadioGroup)findViewById(R.id.RGNatura)).check(R.id.cashRB);
+            else
+                ((RadioGroup)findViewById(R.id.RGNatura)).check(R.id.cardRB);
+
+            //data - din DatePicker + formatare
+            DatePicker dp = findViewById(R.id.DP);
+            Calendar c = Calendar.getInstance();
+            SimpleDateFormat s = new SimpleDateFormat("dd.MM.YYYY");
+            try {
+                c.setTime(s.parse(deEditat.getData()));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            //butoane
+            Button okBtn = findViewById(R.id.BtnIdOK);
+            okBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    editeazaTranzactie(v);
+                }
+            });
+
+        }
     }
 
     public void adaugaCheltuiala(View view) {
@@ -89,16 +142,13 @@ public class OperatiuneActivity extends AppCompatActivity {
         SimpleDateFormat s = new SimpleDateFormat("dd.MM.YYYY");
         String data = s.format(c.getTime());
 
-        //RadioGroups - valuta & natura tranzactiei
-        RadioGroup rgValuta = findViewById(R.id.RGvaluta);
-        RadioButton rbValuta = findViewById(rgValuta.getCheckedRadioButtonId());
-        String valuta = rbValuta.getText().toString();
+        //RadioGroup - natura tranzactiei
         RadioGroup rgNatura = findViewById(R.id.RGNatura);
         RadioButton rbNatura = findViewById(rgNatura.getCheckedRadioButtonId());
         String natura = rbNatura.getText().toString();
 
         //creare obiect cheltuiala
-        Cheltuiala cheltuiala = new Cheltuiala(valoare,categorie,data,valuta,natura);
+        Tranzactie cheltuiala = new Tranzactie(0,valoare,data,natura,categorie,false);
         intent.putExtra("cheltuiala",cheltuiala);
         setResult(RESULT_OK, intent);
         finish();
@@ -120,17 +170,42 @@ public class OperatiuneActivity extends AppCompatActivity {
         SimpleDateFormat s = new SimpleDateFormat("dd.MM.YYYY");
         String data = s.format(c.getTime());
 
-        //RadioGroups - valuta & natura tranzactiei
-        RadioGroup rgValuta = findViewById(R.id.RGvaluta);
-        RadioButton rbValuta = findViewById(rgValuta.getCheckedRadioButtonId());
-        String valuta = rbValuta.getText().toString();
+        //RadioGroup - natura tranzactiei
         RadioGroup rgNatura = findViewById(R.id.RGNatura);
         RadioButton rbNatura = findViewById(rgNatura.getCheckedRadioButtonId());
         String natura = rbNatura.getText().toString();
 
         //creare obiect venit
-        Venit venit = new Venit(valoare,categorie,data,valuta,natura);
+        Tranzactie venit = new Tranzactie(0,valoare, data, natura, categorie, true);
         intent.putExtra("venit",venit);
+        setResult(RESULT_OK, intent);
+        finish();
+    }
+
+    public void editeazaTranzactie(View view) {
+        //preluam datele din activitate
+        //valoare - din EditText
+        String valoareText = ((EditText)findViewById(R.id.ETvaloare)).getText().toString();
+        deEditat.setValoare(Double.parseDouble(valoareText));
+
+        //categorie din spinner
+        deEditat.setCategorie(((Spinner)findViewById(R.id.spinnerSelect)).getSelectedItem().toString());
+
+        //data - din DatePicker + formatare
+        DatePicker dp = findViewById(R.id.DP);
+        Calendar c = Calendar.getInstance();
+        c.set(dp.getYear(),dp.getMonth(),dp.getDayOfMonth());
+        SimpleDateFormat s = new SimpleDateFormat("dd.MM.YYYY");
+        String data = s.format(c.getTime());
+        deEditat.setData(data);
+
+        //RadioGroup - natura tranzactiei
+        RadioGroup rgNatura = findViewById(R.id.RGNatura);
+        RadioButton rbNatura = findViewById(rgNatura.getCheckedRadioButtonId());
+        deEditat.setNatura(rbNatura.getText().toString());
+
+        //creare obiect venit
+        intent.putExtra("editat",deEditat);
         setResult(RESULT_OK, intent);
         finish();
     }
@@ -139,42 +214,5 @@ public class OperatiuneActivity extends AppCompatActivity {
         //setam rezultatul returnat si inchidem activitatea
         setResult(RESULT_CANCELED);
         finish();
-    }
-
-    public class GetJson extends AsyncTask<String, Void, String> {
-        @Override
-        protected String doInBackground(String... strings) {
-            String result = null;
-            try {
-                URL url = new URL(strings[0]);
-                HttpURLConnection http = (HttpURLConnection)url.openConnection();
-                InputStream is = http.getInputStream();
-
-                //citim linie cu linie si punem intr-un stringbuilder continutul
-                BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-
-                String linie = null;
-                StringBuilder builder = new StringBuilder();
-                while((linie = reader.readLine())!=null) {
-                    builder.append(linie);
-                }
-
-                //tot JSON-ul
-                String allCurrencies = builder.toString();
-
-                //parsare JSON
-                JSONObject object = new JSONObject(allCurrencies);
-                JSONObject rates = new JSONObject("rates");
-
-
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            return result;
-        }
     }
 }
