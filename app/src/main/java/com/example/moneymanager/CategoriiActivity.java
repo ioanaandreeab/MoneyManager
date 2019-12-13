@@ -25,7 +25,7 @@ public class CategoriiActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_categorii);
         //bara de back
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         //setup viewpager cu pageAdapter
         myViewPager = findViewById(R.id.viewpager);

@@ -148,7 +148,7 @@ public class OperatiuneActivity extends AppCompatActivity {
         String natura = rbNatura.getText().toString();
 
         //creare obiect cheltuiala
-        Tranzactie cheltuiala = new Tranzactie(0,valoare,data,natura,categorie,false);
+        Tranzactie cheltuiala = new Tranzactie(valoare,data,natura,categorie,false);
         intent.putExtra("cheltuiala",cheltuiala);
         setResult(RESULT_OK, intent);
         finish();
@@ -176,7 +176,7 @@ public class OperatiuneActivity extends AppCompatActivity {
         String natura = rbNatura.getText().toString();
 
         //creare obiect venit
-        Tranzactie venit = new Tranzactie(0,valoare, data, natura, categorie, true);
+        Tranzactie venit = new Tranzactie(valoare, data, natura, categorie, true);
         intent.putExtra("venit",venit);
         setResult(RESULT_OK, intent);
         finish();

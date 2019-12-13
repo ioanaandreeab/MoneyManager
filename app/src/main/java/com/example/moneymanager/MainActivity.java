@@ -27,6 +27,9 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.room.Room;
+import androidx.room.migration.Migration;
+import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import android.view.Menu;
 import android.widget.AdapterView;
@@ -56,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private List<Tranzactie> tranzactii = new ArrayList<>();
     ListView lv;
     SharedPref sharedPref;
+    private MoneyDatabase database;
 
     //functii privind comportamentul fabs
     public void hideBtns() {
@@ -84,15 +88,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     //calcul total - statistici
     private void calcSum() {
-        double totalVenituri = 0;
-        double totalCheltuieli = 0;
-        double balanta = 0;
-        for(Tranzactie tranzactie : tranzactii){
-            if(tranzactie.isEsteAditiva() == false)
-                totalCheltuieli += tranzactie.getValoare();
-            else
-                totalVenituri += tranzactie.getValoare();
-        }
+        double totalVenituri;
+        double totalCheltuieli;
+        double balanta;
+        totalVenituri = database.getTranzactieDAO().selectSumaVenituri();
+        totalCheltuieli = database.getTranzactieDAO().selectSumaCheltuieli();
         balanta = totalVenituri - totalCheltuieli;
         TextView venituri = findViewById(R.id.venitVal);
         venituri.setText(Double.toString(totalVenituri));
@@ -103,25 +103,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         TextView balantaTV = findViewById(R.id.balantaVal);
         balantaTV.setText(Double.toString(balanta));
     }
+/*
+    static final Migration MIGRATION_1_3 = new Migration(1, 3) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE tranzactii "
+                    +"ADD COLUMN aditiva BOOLEAN");
+        }
+    };*/
 
-    //initializare cu date hardcodate a listei
-    private void initLV() {
-        tranzactii.add(new Tranzactie(1,20,"07.11.2019","Cash","Mâncare",false));
-        tranzactii.add(new Tranzactie(2,80,"07.11.2019","Card","Mâncare",false));
-        tranzactii.add(new Tranzactie(3,1000,"07.11.2019","Cash","Salariu",true));
-        tranzactii.add(new Tranzactie(4,70,"07.11.2019","Card","Mâncare",false));
-        tranzactii.add(new Tranzactie(5,30,"07.11.2019","Card","Mâncare",false));
-        tranzactii.add(new Tranzactie(6,100,"07.11.2019","Cash","Împrumut",true));
-    }
 
     //popularea listview-ului
     private void populateLV() {
-        if(tranzactii.size()==0){
-            initLV();
-        }
+        tranzactii = database.getTranzactieDAO().selectToateTranzactiile();
+        calcSum();
         TranzactieAdapter adapter = new TranzactieAdapter(this,R.layout.tranzactie_layout,tranzactii);
         lv.setAdapter(adapter);
-        calcSum();
     }
 
     //adauga meniul pentru darkmode
@@ -163,6 +160,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //initializarea bazei de date la onCreate
+        database = Room.databaseBuilder(this,MoneyDatabase.class,"Moneymanager").allowMainThreadQueries().build();
+
         getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, new HomeFragment()).commit();
         fab = findViewById(R.id.fab);
         fabVenit = findViewById(R.id.fab_venit);
@@ -188,6 +189,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
     }
+
 
     //configurarea meniului
     private void configNavigation() {
@@ -228,6 +230,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startActivityForResult(it,requestCodeAdaugaVenit);
         }
     }
+
     //primirea si adaugarea tranzactiilor din formular in lista
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -235,8 +238,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
            if(resultCode == RESULT_OK) {
                //primesc venitul
                Tranzactie venit = data.getParcelableExtra("venit");
-               Toast.makeText(this,venit.toString(),Toast.LENGTH_LONG).show();
                tranzactii.add(venit);
+               database.getTranzactieDAO().insertTranzactie(venit);
                lv.invalidate();
                populateLV();
            }
@@ -245,19 +248,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if(resultCode == RESULT_OK) {
                 //primesc cheltuiala
                 Tranzactie cheltuiala = data.getParcelableExtra("cheltuiala");
-                tranzactii.add(cheltuiala);
+                database.getTranzactieDAO().insertTranzactie(cheltuiala);
                 lv.invalidate();
                 populateLV();
             }
         }
         else if(requestCode == requestCodeEdit){
-            if(resultCode == RESULT_OK) {
-                Tranzactie tranzactie = data.getParcelableExtra("editat");
-                for (Tranzactie tranz: tranzactii) {
-                    if (tranz.getId() == tranzactie.getId())
-                        tranz=tranzactie;
-                }
-            }
+            if(resultCode == RESULT_OK) {}
         }
     }
 

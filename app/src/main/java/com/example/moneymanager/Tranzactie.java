@@ -4,18 +4,27 @@ import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
+@Entity(tableName = "Tranzactii")
 public class Tranzactie implements Parcelable {
+    @PrimaryKey (autoGenerate = true)
+    @ColumnInfo(name = "ID")
     private int id;
+    @NonNull
+    @ColumnInfo(name = "valoare")
     private double valoare;
     private String data;
     private String natura;
     private String categorie;
+    @ColumnInfo(name = "aditiva")
     private boolean esteAditiva;
 
-    public Tranzactie(int id, double valoare, String data, String natura, String categorie, boolean esteAditiva) {
-        this.id = id;
+    public Tranzactie(@NonNull double valoare, String data, String natura, String categorie, boolean esteAditiva) {
         this.valoare = valoare;
         this.data = data;
         this.natura = natura;
@@ -24,7 +33,6 @@ public class Tranzactie implements Parcelable {
     }
 
     protected Tranzactie(Parcel in) {
-        id = in.readInt();
         valoare = in.readDouble();
         data = in.readString();
         natura = in.readString();
@@ -52,11 +60,12 @@ public class Tranzactie implements Parcelable {
         this.id = id;
     }
 
+    @NonNull
     public double getValoare() {
         return valoare;
     }
 
-    public void setValoare(double valoare) {
+    public void setValoare(@NonNull double valoare) {
         this.valoare = valoare;
     }
 
@@ -112,7 +121,6 @@ public class Tranzactie implements Parcelable {
     @RequiresApi(api = Build.VERSION_CODES.Q) //pentru writeBoolean
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeInt(id);
         parcel.writeDouble(valoare);
         parcel.writeString(data);
         parcel.writeString(natura);
