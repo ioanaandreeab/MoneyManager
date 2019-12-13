@@ -12,13 +12,13 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 public class TabvenFragment extends Fragment {
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_tabven,container,false);
-        ListView listView = v.findViewById(R.id.LVCategVen);
-        ArrayAdapter<String> categVenAdapter = new ArrayAdapter<>(v.getContext(),android.R.layout.simple_list_item_1,v.getContext().getResources().getStringArray(R.array.elemVenituri));
-        listView.setAdapter(categVenAdapter);
-        return  v;
-    }
+  @Nullable
+  @Override
+  public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    View v = inflater.inflate(R.layout.fragment_tabven,container,false);
+    ListView listView = v.findViewById(R.id.LVCategVen);
+    ArrayAdapter<String> categVenAdapter = new ArrayAdapter<>(v.getContext(),android.R.layout.simple_list_item_1,v.getContext().getResources().getStringArray(R.array.elemVenituri));
+    listView.setAdapter(categVenAdapter);
+    return  v;
+  }
 }

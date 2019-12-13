@@ -9,6 +9,10 @@
             android:icon="@drawable/ic_dashboard"
             android:title="@string/menu_home" />
         <item
+            android:id="@+id/nav_convertor"
+            android:icon="@drawable/ic_convert"
+            android:title="@string/convertor_title" />
+        <item
             android:id="@+id/nav_chart"
             android:icon="@drawable/ic_chart"
             android:title="@string/menu_chart" />

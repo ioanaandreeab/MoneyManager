@@ -13,11 +13,11 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 
 public class ChartFragment extends Fragment {
-    View v;
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        v = inflater.inflate(R.layout.fragment_chart,container,false);
-        return v;
-    }
+  View v;
+  @Nullable
+  @Override
+  public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    v = inflater.inflate(R.layout.fragment_chart,container,false);
+    return v;
+  }
 }

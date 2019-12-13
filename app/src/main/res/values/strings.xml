@@ -61,4 +61,9 @@
     <string name="questionRating">Îți place să folosești aplicația?</string>
     <string name="adauga_detalii_label">Adaugă detalii</string>
     <string name="adauga_feedback">Adaugă feedback</string>
+    <string name="convertor_title">Convertor valutar</string>
+    <string name="suma">Suma:</string>
+    <string name="in">În:</string>
+    <string name="convert">Convertește</string>
+    <string name="din">Din:</string>
 </resources>

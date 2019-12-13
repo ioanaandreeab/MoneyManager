@@ -3,6 +3,7 @@ package com.example.moneymanager;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -15,8 +16,17 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.w3c.dom.Text;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
@@ -129,5 +139,42 @@ public class OperatiuneActivity extends AppCompatActivity {
         //setam rezultatul returnat si inchidem activitatea
         setResult(RESULT_CANCELED);
         finish();
+    }
+
+    public class GetJson extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... strings) {
+            String result = null;
+            try {
+                URL url = new URL(strings[0]);
+                HttpURLConnection http = (HttpURLConnection)url.openConnection();
+                InputStream is = http.getInputStream();
+
+                //citim linie cu linie si punem intr-un stringbuilder continutul
+                BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+
+                String linie = null;
+                StringBuilder builder = new StringBuilder();
+                while((linie = reader.readLine())!=null) {
+                    builder.append(linie);
+                }
+
+                //tot JSON-ul
+                String allCurrencies = builder.toString();
+
+                //parsare JSON
+                JSONObject object = new JSONObject(allCurrencies);
+                JSONObject rates = new JSONObject("rates");
+
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return result;
+        }
     }
 }

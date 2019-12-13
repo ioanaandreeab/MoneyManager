@@ -16,13 +16,13 @@ import java.util.Arrays;
 import java.util.List;
 
 public class TabcheltFragment extends Fragment {
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_tabchelt,container,false);
-        ListView listView = v.findViewById(R.id.LVCategChelt);
-        ArrayAdapter<String> categCheltAdapter = new ArrayAdapter<>(v.getContext(),android.R.layout.simple_list_item_1,v.getContext().getResources().getStringArray(R.array.elemCheltuieli));
-        listView.setAdapter(categCheltAdapter);
-        return v;
-    }
+  @Nullable
+  @Override
+  public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    View v = inflater.inflate(R.layout.fragment_tabchelt,container,false);
+    ListView listView = v.findViewById(R.id.LVCategChelt);
+    ArrayAdapter<String> categCheltAdapter = new ArrayAdapter<>(v.getContext(),android.R.layout.simple_list_item_1,v.getContext().getResources().getStringArray(R.array.elemCheltuieli));
+    listView.setAdapter(categCheltAdapter);
+    return v;
+  }
 }

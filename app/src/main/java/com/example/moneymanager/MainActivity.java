@@ -214,7 +214,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, new RatingFragment()).commit();
                 hideBtns();
                 break;
-                //pentru restul sectiunilor ce vor fi implementate in fazele urmatoare afisez un mesaj ce se afla in acelasi fragment
+            case R.id.nav_convertor:
+                Intent intent = new Intent(getApplicationContext(),ConvertorActivity.class);
+                startActivity(intent);
+                break;
+            //pentru restul sectiunilor ce vor fi implementate in fazele urmatoare afisez un mesaj ce se afla in acelasi fragment
                 default:
                     getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, new ChartFragment()).commit();
                     hideBtns();
