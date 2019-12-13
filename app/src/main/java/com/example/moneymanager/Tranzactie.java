@@ -8,13 +8,17 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "Tranzactii")
+@Entity(tableName = "Tranzactii", foreignKeys =
+@ForeignKey(entity = User.class, parentColumns = "id", childColumns = "user_id", onDelete = ForeignKey.CASCADE))
 public class Tranzactie implements Parcelable {
     @PrimaryKey (autoGenerate = true)
-    @ColumnInfo(name = "ID")
+    @ColumnInfo(name = "id")
     private int id;
+    @ColumnInfo(name = "user_id")
+    private int userId;
     @NonNull
     @ColumnInfo(name = "valoare")
     private double valoare;
@@ -23,6 +27,8 @@ public class Tranzactie implements Parcelable {
     private String categorie;
     @ColumnInfo(name = "aditiva")
     private boolean esteAditiva;
+
+
 
     public Tranzactie(@NonNull double valoare, String data, String natura, String categorie, boolean esteAditiva) {
         this.valoare = valoare;
@@ -58,6 +64,14 @@ public class Tranzactie implements Parcelable {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     @NonNull
@@ -127,4 +141,5 @@ public class Tranzactie implements Parcelable {
         parcel.writeString(categorie);
         parcel.writeBoolean(esteAditiva);
     }
+
 }

@@ -8,15 +8,21 @@ import androidx.room.PrimaryKey;
 @Entity(tableName = "Useri")
 public class User {
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "ID")
+    @ColumnInfo(name = "id")
     private int id;
     @NonNull
+    @ColumnInfo(name = "email")
     private String email;
+    @ColumnInfo(name = "nume")
     private String nume;
+    @ColumnInfo(name = "prenume")
     private String prenume;
     @NonNull
+    @ColumnInfo(name = "pass")
     private String pass;
+    @ColumnInfo(name = "rating_text")
     private String rating_text;
+    @ColumnInfo(name = "rating")
     private float rating;
 
     public User(int id, @NonNull String email, String nume, String prenume, @NonNull String pass, String rating_text, float rating) {
