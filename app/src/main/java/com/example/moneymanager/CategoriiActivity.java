@@ -3,6 +3,7 @@ package com.example.moneymanager;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.room.Room;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
@@ -14,8 +15,9 @@ import android.widget.Toast;
 import com.google.android.material.tabs.TabItem;
 import com.google.android.material.tabs.TabLayout;
 
-public class CategoriiActivity extends AppCompatActivity {
+import java.util.List;
 
+public class CategoriiActivity extends AppCompatActivity {
     private ViewPager myViewPager;
     private int requestCodeAddCategVen = 323;
     private int requestCodeAddCategChelt = 434;
@@ -63,14 +65,16 @@ public class CategoriiActivity extends AppCompatActivity {
         //rezultatele vor fi adaugate in lista de categorii din formular atunci cand se vor folosi BD
         if (requestCode == requestCodeAddCategChelt){
             if(resultCode == RESULT_OK) {
-                String categorieNoua = data.getStringExtra("numeCategorie");
-                Toast.makeText(this,categorieNoua, Toast.LENGTH_LONG).show();
+                finish();
+                Intent it = new Intent(this, CategoriiActivity.class);
+                startActivity(it);
             }
         }
         if (requestCode == requestCodeAddCategVen){
             if(resultCode == RESULT_OK) {
-                String categorieNoua = data.getStringExtra("numeCategorie");
-                Toast.makeText(this, categorieNoua,Toast.LENGTH_LONG).show();
+                finish();
+                Intent it = new Intent(this, CategoriiActivity.class);
+                startActivity(it);
             }
         }
     }

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 
+import android.util.Log;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -154,7 +155,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_main);
 
         //initializarea bazei de date la onCreate
-        database = Room.databaseBuilder(this,MoneyDatabase.class,"trial10").allowMainThreadQueries().build();
+        database = Room.databaseBuilder(this,MoneyDatabase.class,"trial14").allowMainThreadQueries().build();
 
         getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, new HomeFragment()).commit();
         fab = findViewById(R.id.fab);
@@ -162,16 +163,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         fabCheltuiala = findViewById(R.id.fab_cheltuiala);
         configNavigation();
         userId = sharedPref.loadCurrentUser();
-
-        //List<User> useri = database.getUserDAO().selectAllusers();
-        //Toast.makeText(getApplicationContext(),String.valueOf(useri.size()),Toast.LENGTH_LONG).show();
-        //List<Tranzactie>tranz1 = database.getTranzactieDAO().selectTranzMail("user");
-        //List<Tranzactie> tranz2 = database.getTranzactieDAO().selectTranzMail("pls");
-        //Toast.makeText(getApplicationContext(),String.valueOf(tranz1.size()),Toast.LENGTH_LONG).show();
-        //Toast.makeText(getApplicationContext(),String.valueOf(tranz2.size()),Toast.LENGTH_LONG).show();
-        /*for(User user: useri) {
-            Toast.makeText(getApplicationContext(),user.toString(),Toast.LENGTH_LONG).show();
-        }*/
     }
 
     //popularea listei se face doar dupa ce a fost primit fragmentul
@@ -184,11 +175,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Tranzactie tranzactie = tranzactii.get(i);
+                database.getTranzactieDAO().deleteTranzactie(tranzactie);
+                Toast.makeText(getApplicationContext(),"Tranzacție ștearsă",Toast.LENGTH_LONG).show();
+                lv.invalidate();
+                populateLV();
+                return true;
+            }
+        });
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent it = new Intent(getApplicationContext(),OperatiuneActivity.class);
                 it.putExtra("edit",tranzactii.get(i)); //se trimite elementul de pe pozitia selectata
                 it.putExtra("pozitie",i);
                 startActivityForResult(it,requestCodeEdit);
-                return true;
             }
         });
     }
@@ -241,8 +242,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
            if(resultCode == RESULT_OK) {
                //primesc venitul
                Tranzactie venit = data.getParcelableExtra("venit");
-               tranzactii.add(venit);
-               database.getTranzactieDAO().insertTranzactie(venit);
+               long id = database.getTranzactieDAO().insertTranzactie(venit);
+               int idTranz = (int)id;
+               venit.setId(idTranz);
                lv.invalidate();
                populateLV();
            }
@@ -251,13 +253,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if(resultCode == RESULT_OK) {
                 //primesc cheltuiala
                 Tranzactie cheltuiala = data.getParcelableExtra("cheltuiala");
-                database.getTranzactieDAO().insertTranzactie(cheltuiala);
+                long id = database.getTranzactieDAO().insertTranzactie(cheltuiala);
+                int idTranz = (int)id;
+                cheltuiala.setId(idTranz);
                 lv.invalidate();
                 populateLV();
             }
         }
         else if(requestCode == requestCodeEdit){
-            if(resultCode == RESULT_OK) {}
+            if(resultCode == RESULT_OK) {
+                Tranzactie tranzactie = data.getParcelableExtra("editat");
+                database.getTranzactieDAO().updateTranzactie(tranzactie);
+                lv.invalidate();
+                populateLV();
+            }
         }
     }
 
@@ -282,6 +291,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Intent intent = new Intent(getApplicationContext(),ConvertorActivity.class);
                 startActivity(intent);
                 break;
+            case R.id.nav_logout:
+                sharedPref.setIsLogged(false);
+                Intent intentLogin = new Intent(getApplicationContext(), LoginActivity.class);
+                startActivity(intentLogin);
             //pentru restul sectiunilor ce vor fi implementate in fazele urmatoare afisez un mesaj ce se afla in acelasi fragment
                 default:
                     getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, new HomeFragment()).commit();
@@ -298,10 +311,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         EditText etDetalii = findViewById(R.id.etDetalii);
         String detalii = etDetalii.getText().toString();
 
-        //luam toate datele
-        StringBuilder sb = new StringBuilder();
-        sb.append(rating).append(" - ").append(detalii);
-        String textFinal = sb.toString();
-        Toast.makeText(this, textFinal,Toast.LENGTH_LONG).show();
+        User user = database.getUserDAO().findUserById(userId);
+        user.setRating(rating);
+        user.setRating_text(detalii);
+        database.getUserDAO().updateUser(user);
+        Toast.makeText(this,"Feedback-ul dumneavoastră a fost înregistrat! Mulțumim!",Toast.LENGTH_LONG).show();
     }
 }

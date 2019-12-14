@@ -31,6 +31,7 @@ import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.List;
 
 public class OperatiuneActivity extends AppCompatActivity {
     Intent intent;
@@ -41,19 +42,22 @@ public class OperatiuneActivity extends AppCompatActivity {
     int userTranzactie;
     MoneyDatabase database;
     User user;
+    List<String> categoriiVenituri;
+    List<String> categoriiCheltuieli;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_operatiune);
-        database = Room.databaseBuilder(getApplicationContext(),MoneyDatabase.class,"trial10").allowMainThreadQueries().build();
+        database = Room.databaseBuilder(getApplicationContext(),MoneyDatabase.class,"trial14").allowMainThreadQueries().build();
         intent = getIntent();
         tip = intent.getStringExtra("tip");
         sharedPref = new SharedPref(this);
         userTranzactie = sharedPref.loadCurrentUser();
         user = database.getUserDAO().findUserById(userTranzactie);
-        String text = "Faceti modificari pentru userul "+user.toString();
-        Toast.makeText(getApplicationContext(),text, Toast.LENGTH_LONG).show();
+        categoriiCheltuieli = database.getCategorieDAO().selectCategoriiCheltuieli();
+        categoriiVenituri = database.getCategorieDAO().selectCategoriiVenituri();
+
         //prelucrari in functie de datele ce trebuie afisate pe formular
         if(tip != null) {
             if (tip.equals("adaugaCheltuiala")) {
@@ -62,7 +66,7 @@ public class OperatiuneActivity extends AppCompatActivity {
                 Spinner spinner = (Spinner) findViewById(R.id.spinnerSelect);
                 ArrayAdapter<String> spinnerAdapter =
                         new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item,
-                                getResources().getStringArray(R.array.elemCheltuieli));
+                                categoriiCheltuieli);
                 spinner.setAdapter(spinnerAdapter);
             } else if (tip.equals("adaugaVenit")) {
                 TextView title = (TextView) findViewById(R.id.Title);
@@ -70,7 +74,7 @@ public class OperatiuneActivity extends AppCompatActivity {
                 Spinner spinner = (Spinner) findViewById(R.id.spinnerSelect);
                 ArrayAdapter<String> spinnerAdapter =
                         new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item,
-                                getResources().getStringArray(R.array.elemVenituri));
+                                categoriiVenituri);
                 spinner.setAdapter(spinnerAdapter);
             }
 
@@ -98,12 +102,12 @@ public class OperatiuneActivity extends AppCompatActivity {
             ArrayAdapter<String> spinnerAdapter;
             if (deEditat.isEsteAditiva()==false) {
                 spinnerAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item,
-                                getResources().getStringArray(R.array.elemCheltuieli));
+                                categoriiCheltuieli);
                 spinner.setAdapter(spinnerAdapter);
             }
             else {
                 spinnerAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item,
-                                getResources().getStringArray(R.array.elemVenituri));
+                                categoriiVenituri);
                 spinner.setAdapter(spinnerAdapter);
             }
             int categPosition = spinnerAdapter.getPosition(deEditat.getCategorie());

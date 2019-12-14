@@ -9,6 +9,7 @@ import androidx.annotation.RequiresApi;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.Insert;
 import androidx.room.PrimaryKey;
@@ -26,8 +27,11 @@ public class Tranzactie implements Parcelable {
     @NonNull
     @ColumnInfo(name = "valoare")
     private double valoare;
+    @ColumnInfo(name = "data")
     private String data;
+    @ColumnInfo(name = "natura")
     private String natura;
+    @ColumnInfo(name = "categorie")
     private String categorie;
     @ColumnInfo(name = "aditiva")
     private boolean esteAditiva;
@@ -46,6 +50,7 @@ public class Tranzactie implements Parcelable {
     }
 
     protected Tranzactie(Parcel in) {
+        id = in.readInt();
         valoare = in.readDouble();
         data = in.readString();
         natura = in.readString();
@@ -136,6 +141,7 @@ public class Tranzactie implements Parcelable {
     @RequiresApi(api = Build.VERSION_CODES.Q) //pentru writeBoolean
     @Override
     public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeInt(id);
         parcel.writeDouble(valoare);
         parcel.writeString(data);
         parcel.writeString(natura);

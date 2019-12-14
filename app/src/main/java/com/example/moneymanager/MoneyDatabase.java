@@ -6,5 +6,6 @@ import androidx.room.RoomDatabase;
 public abstract class MoneyDatabase extends RoomDatabase {
     public abstract TranzactieDAO getTranzactieDAO();
     public abstract  UserDAO getUserDAO();
+    public abstract CategorieDAO getCategorieDAO();
 }
 

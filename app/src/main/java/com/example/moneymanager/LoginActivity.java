@@ -18,7 +18,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        database = Room.databaseBuilder(getApplicationContext(),MoneyDatabase.class,"trial10").allowMainThreadQueries().build();
+        database = Room.databaseBuilder(getApplicationContext(),MoneyDatabase.class,"trial14").allowMainThreadQueries().build();
         sharedPref = new SharedPref(this);
     }
 
@@ -30,13 +30,17 @@ public class LoginActivity extends AppCompatActivity {
         String pass = ETpass.getText().toString();
         int idDupaMail = database.getUserDAO().idUserMail(mail);
         int idDupaPass = database.getUserDAO().idUserPass(pass);
-        if(idDupaMail==idDupaPass){
+        if(idDupaMail==idDupaPass && idDupaMail!=0 && idDupaPass!=0){
             sharedPref.setUser(idDupaMail);
+            sharedPref.setIsLogged(true);
             Intent it = new Intent(getApplicationContext(),MainActivity.class);
             finish();
             startActivity(it);
         }
-        else Toast.makeText(this,"User și/sau parolă incorecte.",Toast.LENGTH_LONG);
+        else if(idDupaMail== 0 && idDupaPass== 0){
+            Toast.makeText(this,"User inexistent! Înregistrați-vă!",Toast.LENGTH_LONG).show();
+        }
+        else Toast.makeText(this,"User sau parolă incorect/ă!",Toast.LENGTH_LONG).show();
     }
 
     public void openRegisterForm(View view) {

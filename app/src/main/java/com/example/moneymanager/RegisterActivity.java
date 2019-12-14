@@ -14,7 +14,21 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-        database = Room.databaseBuilder(getApplicationContext(),MoneyDatabase.class,"trial10").allowMainThreadQueries().build();
+        database = Room.databaseBuilder(getApplicationContext(),MoneyDatabase.class,"trial14").allowMainThreadQueries().build();
+
+        //adaugare categorii prestabilite pt user
+        database.getCategorieDAO().insertCategorie(new Categorie(true,"Salariu"));
+        database.getCategorieDAO().insertCategorie(new Categorie(true,"Împrumuturi"));
+        database.getCategorieDAO().insertCategorie(new Categorie(true,"Cadouri"));
+        database.getCategorieDAO().insertCategorie(new Categorie(true,"Voucher"));
+
+        database.getCategorieDAO().insertCategorie(new Categorie(false,"Facturi"));
+        database.getCategorieDAO().insertCategorie(new Categorie(false,"Mâncare"));
+        database.getCategorieDAO().insertCategorie(new Categorie(false,"Transport"));
+        database.getCategorieDAO().insertCategorie(new Categorie(false,"Taxe"));
+        database.getCategorieDAO().insertCategorie(new Categorie(false,"Timp liber"));
+        database.getCategorieDAO().insertCategorie(new Categorie(false,"Educatie"));
+
     }
 
     public void cancel(View view) {

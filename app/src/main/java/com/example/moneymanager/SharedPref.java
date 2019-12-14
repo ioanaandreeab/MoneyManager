@@ -16,6 +16,7 @@ public class SharedPref {
         editor.commit();
     }
 
+    //salveaza id-ul utilizatorului logat
     public void setUser(int idUser){
         SharedPreferences.Editor editor = mySharedPreference.edit();
         editor.putInt("IdUser", idUser);
@@ -28,10 +29,24 @@ public class SharedPref {
         return state;
     }
 
+    //incarca id-ul utilizatorului logat
     public int loadCurrentUser() {
         int idUser = mySharedPreference.getInt("IdUser",0);
         return idUser;
     }
 
+    //salveaza daca utilizatorul e logat
+    public void setIsLogged(boolean state){
+        SharedPreferences.Editor editor = mySharedPreference.edit();
+        editor.putBoolean("Logat", state);
+        editor.commit();
+    }
+
+    //incarca daca utilizatorul e logat
+    //incarca starea de dark mode
+    public Boolean loadIsLogged() {
+        Boolean state = mySharedPreference.getBoolean("Logat",false);
+        return state;
+    }
 
 }

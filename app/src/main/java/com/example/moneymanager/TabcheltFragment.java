@@ -10,18 +10,25 @@ import android.widget.ListView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.room.Room;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class TabcheltFragment extends Fragment {
+  List<String> categoriiCheltuieli;
+  MoneyDatabase database;
   @Nullable
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    database= Room.databaseBuilder(getContext(),MoneyDatabase.class,"trial14").allowMainThreadQueries().build();
+    categoriiCheltuieli = database.getCategorieDAO().selectCategoriiCheltuieli();
+
     View v = inflater.inflate(R.layout.fragment_tabchelt,container,false);
     ListView listView = v.findViewById(R.id.LVCategChelt);
-    ArrayAdapter<String> categCheltAdapter = new ArrayAdapter<>(v.getContext(),android.R.layout.simple_list_item_1,v.getContext().getResources().getStringArray(R.array.elemCheltuieli));
+
+    ArrayAdapter<String> categCheltAdapter = new ArrayAdapter<>(v.getContext(),android.R.layout.simple_list_item_1,categoriiCheltuieli);
     listView.setAdapter(categCheltAdapter);
     return v;
   }

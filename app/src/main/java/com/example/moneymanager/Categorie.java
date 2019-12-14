@@ -14,8 +14,7 @@ public class Categorie {
     @NonNull
     private String denumire;
 
-    public Categorie(int id, boolean aditiva, @NonNull String denumire) {
-        this.id = id;
+    public Categorie(boolean aditiva, @NonNull String denumire) {
         this.aditiva = aditiva;
         this.denumire = denumire;
     }

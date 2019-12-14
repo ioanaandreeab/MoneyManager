@@ -35,21 +35,6 @@
     <string name="login">Login</string>
     <string name="textProvizoriu">Content to be done</string>
 
-    //array de elemente pentru spinner cheltuieli
-    <array name="elemCheltuieli">
-        <item>Facturi</item>
-        <item>Mâncare</item>
-        <item>Transport</item>
-        <item>Timp liber</item>
-        <item>Taxe</item>
-        <item>Educație</item>
-    </array>
-    <array name="elemVenituri">
-        <item>Salariu</item>
-        <item>Împrumuturi</item>
-        <item>Cadouri</item>
-        <item>Voucher</item>
-    </array>
     <string name="title_activity_categorii">CategoriiActivity</string>
     <string name="tab_text_1">Tab 1</string>
     <string name="tab_text_2">Tab 2</string>
@@ -70,4 +55,5 @@
     <string name="nume">Nume:</string>
     <string name="prenume">Prenume:</string>
     <string name="mail">Mail:</string>
+    <string name="logout">Deconectează-te</string>
 </resources>
