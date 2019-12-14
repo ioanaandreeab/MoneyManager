@@ -31,7 +31,6 @@
     <string name="balanta">Balanță</string>
     <string name="istoricTranzactiiTitle">Istoric tranzacții</string>
     <string name="registerLabel">Nu ai cont? Înregistrează-te</string>
-    <string name="mail">Mail:</string>
     <string name="parola">Parolă:</string>
     <string name="login">Login</string>
     <string name="textProvizoriu">Content to be done</string>
@@ -67,4 +66,8 @@
     <string name="convert">Convertește</string>
     <string name="din">Din:</string>
     <string name="editTranzactie">Editează tranzacție</string>
+    <string name="registerTitle">Creează un cont nou</string>
+    <string name="nume">Nume:</string>
+    <string name="prenume">Prenume:</string>
+    <string name="mail">Mail:</string>
 </resources>

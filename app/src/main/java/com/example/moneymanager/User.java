@@ -3,12 +3,16 @@ package com.example.moneymanager;
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "Useri")
+import java.util.List;
+
+@Entity(tableName = "Useri",indices = {@Index(value = "email",unique = true)})
 public class User {
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "id")
+    @ColumnInfo(name = "userId")
     private int id;
     @NonNull
     @ColumnInfo(name = "email")
@@ -25,8 +29,7 @@ public class User {
     @ColumnInfo(name = "rating")
     private float rating;
 
-    public User(int id, @NonNull String email, String nume, String prenume, @NonNull String pass, String rating_text, float rating) {
-        this.id = id;
+    public User(@NonNull String email, String nume, String prenume, @NonNull String pass, String rating_text, float rating) {
         this.email = email;
         this.nume = nume;
         this.prenume = prenume;
@@ -105,4 +108,5 @@ public class User {
                 ", rating=" + rating +
                 '}';
     }
+
 }

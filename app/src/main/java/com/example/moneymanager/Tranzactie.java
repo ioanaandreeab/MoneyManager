@@ -9,16 +9,20 @@ import androidx.annotation.RequiresApi;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Index;
+import androidx.room.Insert;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "Tranzactii", foreignKeys =
-@ForeignKey(entity = User.class, parentColumns = "id", childColumns = "user_id", onDelete = ForeignKey.CASCADE))
+@Entity(tableName = "Tranzactii",
+foreignKeys = @ForeignKey(entity = User.class,
+parentColumns = "userId",
+childColumns = "idUserTranz",
+onDelete = ForeignKey.CASCADE), indices =
+        {@Index("valoare"), @Index("idUserTranz")})
 public class Tranzactie implements Parcelable {
     @PrimaryKey (autoGenerate = true)
     @ColumnInfo(name = "id")
     private int id;
-    @ColumnInfo(name = "user_id")
-    private int userId;
     @NonNull
     @ColumnInfo(name = "valoare")
     private double valoare;
@@ -28,14 +32,17 @@ public class Tranzactie implements Parcelable {
     @ColumnInfo(name = "aditiva")
     private boolean esteAditiva;
 
+    @ColumnInfo(name = "idUserTranz")
+    private int idUserTranz;
 
 
-    public Tranzactie(@NonNull double valoare, String data, String natura, String categorie, boolean esteAditiva) {
+    public Tranzactie(@NonNull double valoare, String data, String natura, String categorie, boolean esteAditiva, int idUserTranz) {
         this.valoare = valoare;
         this.data = data;
         this.natura = natura;
         this.categorie = categorie;
         this.esteAditiva = esteAditiva;
+        this.idUserTranz = idUserTranz;
     }
 
     protected Tranzactie(Parcel in) {
@@ -44,6 +51,7 @@ public class Tranzactie implements Parcelable {
         natura = in.readString();
         categorie = in.readString();
         esteAditiva = in.readByte() != 0;
+        idUserTranz = in.readInt();
     }
 
     public static final Creator<Tranzactie> CREATOR = new Creator<Tranzactie>() {
@@ -66,13 +74,6 @@ public class Tranzactie implements Parcelable {
         this.id = id;
     }
 
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
 
     @NonNull
     public double getValoare() {
@@ -140,6 +141,14 @@ public class Tranzactie implements Parcelable {
         parcel.writeString(natura);
         parcel.writeString(categorie);
         parcel.writeBoolean(esteAditiva);
+        parcel.writeInt(idUserTranz);
     }
 
+    public Integer getIdUserTranz() {
+        return idUserTranz;
+    }
+
+    public void setIdUserTranz(Integer idUserTranz) {
+        this.idUserTranz = idUserTranz;
+    }
 }

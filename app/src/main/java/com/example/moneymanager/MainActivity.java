@@ -60,6 +60,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     ListView lv;
     SharedPref sharedPref;
     private MoneyDatabase database;
+    private int userId;
 
     //functii privind comportamentul fabs
     public void hideBtns() {
@@ -91,8 +92,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         double totalVenituri;
         double totalCheltuieli;
         double balanta;
-        totalVenituri = database.getTranzactieDAO().selectSumaVenituri();
-        totalCheltuieli = database.getTranzactieDAO().selectSumaCheltuieli();
+        totalVenituri = database.getTranzactieDAO().selectSumaVenituri(userId);
+        totalCheltuieli = database.getTranzactieDAO().selectSumaCheltuieli(userId);
         balanta = totalVenituri - totalCheltuieli;
         TextView venituri = findViewById(R.id.venitVal);
         venituri.setText(Double.toString(totalVenituri));
@@ -103,19 +104,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         TextView balantaTV = findViewById(R.id.balantaVal);
         balantaTV.setText(Double.toString(balanta));
     }
-/*
-    static final Migration MIGRATION_1_3 = new Migration(1, 3) {
-        @Override
-        public void migrate(SupportSQLiteDatabase database) {
-            database.execSQL("ALTER TABLE tranzactii "
-                    +"ADD COLUMN aditiva BOOLEAN");
-        }
-    };*/
-
 
     //popularea listview-ului
     private void populateLV() {
-        tranzactii = database.getTranzactieDAO().selectToateTranzactiile();
+        tranzactii = database.getTranzactieDAO().cautaTranzactiiDupaUserId(userId);
         calcSum();
         TranzactieAdapter adapter = new TranzactieAdapter(this,R.layout.tranzactie_layout,tranzactii);
         lv.setAdapter(adapter);
@@ -162,13 +154,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_main);
 
         //initializarea bazei de date la onCreate
-        database = Room.databaseBuilder(this,MoneyDatabase.class,"Moneymanager").allowMainThreadQueries().build();
+        database = Room.databaseBuilder(this,MoneyDatabase.class,"trial10").allowMainThreadQueries().build();
 
         getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, new HomeFragment()).commit();
         fab = findViewById(R.id.fab);
         fabVenit = findViewById(R.id.fab_venit);
         fabCheltuiala = findViewById(R.id.fab_cheltuiala);
         configNavigation();
+        userId = sharedPref.loadCurrentUser();
+
+        //List<User> useri = database.getUserDAO().selectAllusers();
+        //Toast.makeText(getApplicationContext(),String.valueOf(useri.size()),Toast.LENGTH_LONG).show();
+        //List<Tranzactie>tranz1 = database.getTranzactieDAO().selectTranzMail("user");
+        //List<Tranzactie> tranz2 = database.getTranzactieDAO().selectTranzMail("pls");
+        //Toast.makeText(getApplicationContext(),String.valueOf(tranz1.size()),Toast.LENGTH_LONG).show();
+        //Toast.makeText(getApplicationContext(),String.valueOf(tranz2.size()),Toast.LENGTH_LONG).show();
+        /*for(User user: useri) {
+            Toast.makeText(getApplicationContext(),user.toString(),Toast.LENGTH_LONG).show();
+        }*/
     }
 
     //popularea listei se face doar dupa ce a fost primit fragmentul

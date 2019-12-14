@@ -1,6 +1,7 @@
 package com.example.moneymanager;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.room.Room;
 
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -36,13 +37,23 @@ public class OperatiuneActivity extends AppCompatActivity {
     String tip;
     Tranzactie deEditat;
     int pozitieDeEditat;
+    SharedPref sharedPref;
+    int userTranzactie;
+    MoneyDatabase database;
+    User user;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_operatiune);
+        database = Room.databaseBuilder(getApplicationContext(),MoneyDatabase.class,"trial10").allowMainThreadQueries().build();
         intent = getIntent();
         tip = intent.getStringExtra("tip");
-
+        sharedPref = new SharedPref(this);
+        userTranzactie = sharedPref.loadCurrentUser();
+        user = database.getUserDAO().findUserById(userTranzactie);
+        String text = "Faceti modificari pentru userul "+user.toString();
+        Toast.makeText(getApplicationContext(),text, Toast.LENGTH_LONG).show();
         //prelucrari in functie de datele ce trebuie afisate pe formular
         if(tip != null) {
             if (tip.equals("adaugaCheltuiala")) {
@@ -148,7 +159,7 @@ public class OperatiuneActivity extends AppCompatActivity {
         String natura = rbNatura.getText().toString();
 
         //creare obiect cheltuiala
-        Tranzactie cheltuiala = new Tranzactie(valoare,data,natura,categorie,false);
+        Tranzactie cheltuiala = new Tranzactie(valoare,data,natura,categorie,false, user.getId());
         intent.putExtra("cheltuiala",cheltuiala);
         setResult(RESULT_OK, intent);
         finish();
@@ -176,7 +187,7 @@ public class OperatiuneActivity extends AppCompatActivity {
         String natura = rbNatura.getText().toString();
 
         //creare obiect venit
-        Tranzactie venit = new Tranzactie(valoare, data, natura, categorie, true);
+        Tranzactie venit = new Tranzactie(valoare, data, natura, categorie, true, user.getId());
         intent.putExtra("venit",venit);
         setResult(RESULT_OK, intent);
         finish();
