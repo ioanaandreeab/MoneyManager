@@ -1,12 +1,19 @@
 package com.example.moneymanager;
 
+import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
+import android.database.sqlite.SQLiteCursor;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -34,22 +41,42 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import android.view.Menu;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.PopupWindow;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.RatingBar;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.w3c.dom.Text;
+
+import java.io.BufferedWriter;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.Inet4Address;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     DrawerLayout drawerLayout;
+    private static final String CSV_SEPARATOR = ",";
     private FloatingActionButton fab;
     private FloatingActionButton fabVenit;
     private FloatingActionButton fabCheltuiala;
@@ -62,6 +89,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     SharedPref sharedPref;
     private MoneyDatabase database;
     private int userId;
+    Dialog dialogExport;
 
     //functii privind comportamentul fabs
     public void hideBtns() {
@@ -153,6 +181,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //pt dialog
+        dialogExport = new Dialog(this);
 
         //initializarea bazei de date la onCreate
         database = Room.databaseBuilder(this,MoneyDatabase.class,"trial14").allowMainThreadQueries().build();
@@ -270,6 +301,98 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
+    private void saveToTextFile(List<Tranzactie> tranzactii) {
+        try {
+            FileOutputStream fileOutputStream = openFileOutput("raport.txt", Context.MODE_PRIVATE);
+            DataOutputStream out = new DataOutputStream(fileOutputStream);
+            for(Tranzactie tranzactie: tranzactii){
+                if(tranzactie.isEsteAditiva()==true){
+                    out.write("Venit: ".getBytes());
+                }
+                else if(tranzactie.isEsteAditiva() ==false){
+                    out.write("Cheltuială: ".getBytes());
+                }
+                out.write(tranzactie.toString().getBytes());
+                out.write("\n".getBytes());
+            }
+            out.close();
+            fileOutputStream.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void saveToCsvFile(List<Tranzactie> tranzactii){
+        try {
+            FileOutputStream fileOutputStream = openFileOutput("raport.csv", Context.MODE_PRIVATE);
+            DataOutputStream out = new DataOutputStream(fileOutputStream);
+            for(Tranzactie tranzactie: tranzactii){
+                out.write('"');
+                out.write(String.valueOf(tranzactie.getId()).getBytes());
+                out.write('"');
+                out.write(CSV_SEPARATOR.getBytes());
+                out.write('"');
+                out.write(tranzactie.getCategorie().getBytes());
+                out.write('"');
+                out.write(CSV_SEPARATOR.getBytes());
+                out.write('"');
+                out.write(tranzactie.getData().getBytes());
+                out.write('"');
+                out.write(CSV_SEPARATOR.getBytes());
+                out.write('"');
+                out.write(tranzactie.getNatura().getBytes());
+                out.write('"');
+                out.write(CSV_SEPARATOR.getBytes());
+                out.write('"');
+                out.write(tranzactie.isEsteAditiva() ? "true".getBytes() : "false".getBytes());
+                out.write('"');
+                out.write("\n".getBytes());
+            }
+            out.close();
+            fileOutputStream.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public void exportHandler(){
+        TextView close = dialogExport.findViewById(R.id.txtclose);
+        close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialogExport.dismiss();
+            }
+        });
+        Button closebtn = dialogExport.findViewById(R.id.exportCancel);
+        closebtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialogExport.dismiss();
+            }
+        });
+        Button okBtn = dialogExport.findViewById(R.id.exportOK);
+        okBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                RadioGroup optiuni = dialogExport.findViewById(R.id.optiuneExport);
+                RadioButton optiuneSelectata = dialogExport.findViewById(optiuni.getCheckedRadioButtonId());
+                String optiuneSelectataText = optiuneSelectata.getText().toString();
+                if (optiuneSelectataText.equals(".txt")){
+                    saveToTextFile(tranzactii);
+                    Toast.makeText(getApplicationContext(),"Raportul a fost salvat cu succes într-un fișier .txt",Toast.LENGTH_LONG).show();
+                    dialogExport.dismiss();
+                }
+                else if (optiuneSelectataText.equals(".csv")){
+                    saveToCsvFile(tranzactii);
+                    Toast.makeText(getApplicationContext(),"Raportul a fost salvat cu succes într-un fișier .csv",Toast.LENGTH_LONG).show();
+                    dialogExport.dismiss();
+                }
+
+            }
+        });
+    }
+
     //handler pentru selectarea butoanelor din meniu
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
@@ -291,10 +414,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Intent intent = new Intent(getApplicationContext(),ConvertorActivity.class);
                 startActivity(intent);
                 break;
+            case R.id.nav_export:
+                //prelucrarile de la export
+                dialogExport.setContentView(R.layout.popup_export);
+                exportHandler();
+                dialogExport.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                dialogExport.show();
+                break;
             case R.id.nav_logout:
                 sharedPref.setIsLogged(false);
                 Intent intentLogin = new Intent(getApplicationContext(), LoginActivity.class);
                 startActivity(intentLogin);
+                break;
+            case R.id.nav_deleteUser:
+                User user = database.getUserDAO().findUserById(userId);
+                database.getUserDAO().deleteUser(user);
+                Toast.makeText(getApplicationContext(),"Ați renunțat la cont",Toast.LENGTH_LONG).show();
+                intentLogin = new Intent(getApplicationContext(), LoginActivity.class);
+                startActivity(intentLogin);
+                break;
             //pentru restul sectiunilor ce vor fi implementate in fazele urmatoare afisez un mesaj ce se afla in acelasi fragment
                 default:
                     getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, new HomeFragment()).commit();

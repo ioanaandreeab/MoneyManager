@@ -123,13 +123,10 @@ public class Tranzactie implements Parcelable {
 
     @Override
     public String toString() {
-        return "Tranzactie{" +
-                "valoare=" + valoare +
-                ", data='" + data + '\'' +
-                ", natura='" + natura + '\'' +
-                ", categorie='" + categorie + '\'' +
-                ", esteAditiva=" + esteAditiva +
-                '}';
+        return "valoare = " + valoare +
+                ", data = '" + data + '\'' +
+                ", natura = '" + natura + '\'' +
+                ", categorie = '" + categorie + '\'';
     }
 
 

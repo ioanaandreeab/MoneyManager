@@ -1,6 +1,7 @@
 package com.example.moneymanager;
 
 import androidx.room.Dao;
+import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
@@ -29,6 +30,9 @@ public interface UserDAO {
 
     @Update
     void updateUser(User user);
+
+    @Delete
+    void deleteUser(User user);
 
 
 }
