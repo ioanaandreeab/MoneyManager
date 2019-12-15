@@ -7,6 +7,14 @@
     android:layout_marginLeft="@dimen/fab_margin"
     android:layout_marginRight="@dimen/fab_margin">
   <!--Dashboard title-->
+  <TextView
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:id="@+id/greeting"
+      android:textStyle="bold"
+      android:textSize="@dimen/titleSize"
+      android:layout_marginTop="@dimen/marginTopGreeting">
+  </TextView>
   <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"

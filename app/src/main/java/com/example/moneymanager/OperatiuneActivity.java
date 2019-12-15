@@ -49,14 +49,14 @@ public class OperatiuneActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_operatiune);
-        database = Room.databaseBuilder(getApplicationContext(),MoneyDatabase.class,"trial14").allowMainThreadQueries().build();
+        database = Room.databaseBuilder(getApplicationContext(),MoneyDatabase.class,"moneyManager").allowMainThreadQueries().build();
         intent = getIntent();
         tip = intent.getStringExtra("tip");
         sharedPref = new SharedPref(this);
         userTranzactie = sharedPref.loadCurrentUser();
         user = database.getUserDAO().findUserById(userTranzactie);
-        categoriiCheltuieli = database.getCategorieDAO().selectCategoriiCheltuieli();
-        categoriiVenituri = database.getCategorieDAO().selectCategoriiVenituri();
+        categoriiCheltuieli = database.getCategorieDAO().selectCategoriiCheltuieli(userTranzactie);
+        categoriiVenituri = database.getCategorieDAO().selectCategoriiVenituri(userTranzactie);
 
         //prelucrari in functie de datele ce trebuie afisate pe formular
         if(tip != null) {

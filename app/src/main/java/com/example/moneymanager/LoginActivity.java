@@ -18,11 +18,11 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        database = Room.databaseBuilder(getApplicationContext(),MoneyDatabase.class,"trial14").allowMainThreadQueries().build();
+        database = Room.databaseBuilder(getApplicationContext(),MoneyDatabase.class,"moneyManager").allowMainThreadQueries().build();
         sharedPref = new SharedPref(this);
     }
 
-    //pentru moment doar se verifica niste date hardcodate
+    //verificare login
     public void checkLogin(View view) {
         EditText ETmail = findViewById(R.id.mailLogin);
         String mail = ETmail.getText().toString();
@@ -30,16 +30,22 @@ public class LoginActivity extends AppCompatActivity {
         String pass = ETpass.getText().toString();
         int idDupaMail = database.getUserDAO().idUserMail(mail);
         int idDupaPass = database.getUserDAO().idUserPass(pass);
+
+
+        //userul si parola exista in BD si corespund
         if(idDupaMail==idDupaPass && idDupaMail!=0 && idDupaPass!=0){
+            //se salveaza in fisierul de preferinte id-ul userului curent din app si faptul ca s-a logat
             sharedPref.setUser(idDupaMail);
             sharedPref.setIsLogged(true);
             Intent it = new Intent(getApplicationContext(),MainActivity.class);
             finish();
             startActivity(it);
         }
+        //userul nu exista
         else if(idDupaMail== 0 && idDupaPass== 0){
             Toast.makeText(this,"User inexistent! Înregistrați-vă!",Toast.LENGTH_LONG).show();
         }
+        //parola sau adresa de mail gresita
         else Toast.makeText(this,"User sau parolă incorect/ă!",Toast.LENGTH_LONG).show();
     }
 

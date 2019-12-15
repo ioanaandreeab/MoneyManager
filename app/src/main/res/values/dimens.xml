@@ -10,5 +10,6 @@
     <dimen name="fab_105">105dp</dimen>
     <dimen name="titleSize">30sp</dimen>
     <dimen name="smallerTitleSize">20sp</dimen>
+    <dimen name="marginTopGreeting">10dp</dimen>
 
 </resources>

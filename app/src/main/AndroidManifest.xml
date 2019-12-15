@@ -13,7 +13,8 @@
         android:supportsRtl="true"
         android:theme="@style/myTheme">
         <activity android:name=".RegisterActivity"></activity>
-        <activity android:name=".ConvertorActivity" />
+        <activity android:name=".ConvertorActivity"
+            android:parentActivityName=".MainActivity"/>
         <activity android:name=".AddCategActivity" />
         <activity
             android:name=".CategoriiActivity"

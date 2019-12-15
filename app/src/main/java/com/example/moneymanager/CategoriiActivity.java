@@ -27,7 +27,7 @@ public class CategoriiActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_categorii);
         //bara de back
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         //setup viewpager cu pageAdapter
         myViewPager = findViewById(R.id.viewpager);
@@ -62,12 +62,13 @@ public class CategoriiActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        //rezultatele vor fi adaugate in lista de categorii din formular atunci cand se vor folosi BD
         if (requestCode == requestCodeAddCategChelt){
             if(resultCode == RESULT_OK) {
                 finish();
+                //s-a adaugat in bd si acum repornesc activitatea pentru a vedea modificarile
                 Intent it = new Intent(this, CategoriiActivity.class);
                 startActivity(it);
+                Toast.makeText(getApplicationContext(),"Categorie de cheltuială adăugată cu succes",Toast.LENGTH_LONG).show();
             }
         }
         if (requestCode == requestCodeAddCategVen){
@@ -75,6 +76,7 @@ public class CategoriiActivity extends AppCompatActivity {
                 finish();
                 Intent it = new Intent(this, CategoriiActivity.class);
                 startActivity(it);
+                Toast.makeText(getApplicationContext(),"Categorie de venit adăugată cu succes",Toast.LENGTH_LONG).show();
             }
         }
     }

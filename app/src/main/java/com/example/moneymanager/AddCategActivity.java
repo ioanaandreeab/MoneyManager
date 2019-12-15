@@ -8,10 +8,12 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class AddCategActivity extends AppCompatActivity {
     MoneyDatabase database;
     Categorie categorie;
+    SharedPref sharedPref;
 
     Intent it;
     @Override
@@ -19,8 +21,9 @@ public class AddCategActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_categ);
         TextView tvCateg = findViewById(R.id.titluAddCateg);
+        sharedPref = new SharedPref(this);
 
-        database = Room.databaseBuilder(this,MoneyDatabase.class,"trial14").allowMainThreadQueries().build();
+        database = Room.databaseBuilder(this,MoneyDatabase.class,"moneyManager").allowMainThreadQueries().build();
 
         it = getIntent();
         if(it.getStringExtra("categorie").equals("venit")){
@@ -43,7 +46,8 @@ public class AddCategActivity extends AppCompatActivity {
             aditiv = false;
         }
 
-        categorie = new Categorie(aditiv,numeCategorie);
+        int idUser = sharedPref.loadCurrentUser();
+        categorie = new Categorie(aditiv,numeCategorie,idUser);
         database.getCategorieDAO().insertCategorie(categorie);
         it.putExtra("numeCategorie",numeCategorie);
         setResult(RESULT_OK,it);

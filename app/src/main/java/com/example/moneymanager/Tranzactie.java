@@ -121,6 +121,14 @@ public class Tranzactie implements Parcelable {
         this.esteAditiva = esteAditiva;
     }
 
+    public Integer getIdUserTranz() {
+        return idUserTranz;
+    }
+
+    public void setIdUserTranz(Integer idUserTranz) {
+        this.idUserTranz = idUserTranz;
+    }
+
     @Override
     public String toString() {
         return "valoare = " + valoare +
@@ -128,7 +136,6 @@ public class Tranzactie implements Parcelable {
                 ", natura = '" + natura + '\'' +
                 ", categorie = '" + categorie + '\'';
     }
-
 
     @Override
     public int describeContents() {
@@ -147,11 +154,4 @@ public class Tranzactie implements Parcelable {
         parcel.writeInt(idUserTranz);
     }
 
-    public Integer getIdUserTranz() {
-        return idUserTranz;
-    }
-
-    public void setIdUserTranz(Integer idUserTranz) {
-        this.idUserTranz = idUserTranz;
-    }
 }

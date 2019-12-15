@@ -6,14 +6,7 @@ import  android.content.SharedPreferences;
 public class SharedPref {
     SharedPreferences mySharedPreference;
     public  SharedPref(Context context) {
-        mySharedPreference = context.getSharedPreferences("filename",Context.MODE_PRIVATE);
-    }
-
-    //salveaza starea pe care o are optiunea de dark mode -> true sau false
-    public void setDarkMode(Boolean state){
-        SharedPreferences.Editor editor = mySharedPreference.edit();
-        editor.putBoolean("DarkMode",state);
-        editor.commit();
+        mySharedPreference = context.getSharedPreferences("sharedPref",Context.MODE_PRIVATE);
     }
 
     //salveaza id-ul utilizatorului logat
@@ -21,12 +14,6 @@ public class SharedPref {
         SharedPreferences.Editor editor = mySharedPreference.edit();
         editor.putInt("IdUser", idUser);
         editor.commit();
-    }
-
-    //incarca starea de dark mode
-    public Boolean loadDarkModeState() {
-        Boolean state = mySharedPreference.getBoolean("DarkMode",false);
-        return state;
     }
 
     //incarca id-ul utilizatorului logat
@@ -43,7 +30,6 @@ public class SharedPref {
     }
 
     //incarca daca utilizatorul e logat
-    //incarca starea de dark mode
     public Boolean loadIsLogged() {
         Boolean state = mySharedPreference.getBoolean("Logat",false);
         return state;

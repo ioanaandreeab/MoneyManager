@@ -57,4 +57,9 @@
     <string name="mail">Mail:</string>
     <string name="logout">Deconectează-te</string>
     <string name="sterge_contul">Șterge contul</string>
+    <string name="export_title">Exportă raportul tranzacțiilor tale!</string>
+    <string name="type_title">Alege tipul fișierului</string>
+    <string name="txt">.txt</string>
+    <string name="csv">.csv</string>
+    <string name="convertorTitle">Convertor valutar</string>
 </resources>

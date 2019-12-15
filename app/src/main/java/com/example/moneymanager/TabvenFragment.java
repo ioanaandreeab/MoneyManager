@@ -17,12 +17,15 @@ import java.util.List;
 public class TabvenFragment extends Fragment {
   List<String> categoriiVenituri;
   MoneyDatabase database;
+  SharedPref sharedPref;
   @Nullable
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
     View v = inflater.inflate(R.layout.fragment_tabven,container,false);
-    database= Room.databaseBuilder(getContext(),MoneyDatabase.class,"trial14").allowMainThreadQueries().build();
-    categoriiVenituri = database.getCategorieDAO().selectCategoriiVenituri();
+    database= Room.databaseBuilder(getContext(),MoneyDatabase.class,"moneyManager").allowMainThreadQueries().build();
+    sharedPref = new SharedPref(getContext());
+    int user = sharedPref.loadCurrentUser();
+    categoriiVenituri = database.getCategorieDAO().selectCategoriiVenituri(user);
     ListView listView = v.findViewById(R.id.LVCategVen);
     ArrayAdapter<String> categVenAdapter = new ArrayAdapter<>(v.getContext(),android.R.layout.simple_list_item_1,categoriiVenituri);
     listView.setAdapter(categVenAdapter);

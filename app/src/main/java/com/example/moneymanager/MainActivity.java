@@ -91,6 +91,102 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private int userId;
     Dialog dialogExport;
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        sharedPref = new SharedPref(this);
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        //pt dialog
+        dialogExport = new Dialog(this);
+
+        //initializarea bazei de date la onCreate
+        database = Room.databaseBuilder(this,MoneyDatabase.class,"moneyManager").allowMainThreadQueries().build();
+
+        getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, new HomeFragment()).commit();
+        fab = findViewById(R.id.fab);
+        fabVenit = findViewById(R.id.fab_venit);
+        fabCheltuiala = findViewById(R.id.fab_cheltuiala);
+        configNavigation();
+        userId = sharedPref.loadCurrentUser();
+
+    }
+
+    //popularea listei se face doar dupa ce a fost primit fragmentul
+    @Override
+    protected void onStart() {
+        super.onStart();
+        lv = findViewById(R.id.listViewTranzactii);
+        populateLV();
+
+        //la longclick se sterge elementul
+        lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Tranzactie tranzactie = tranzactii.get(i);
+                database.getTranzactieDAO().deleteTranzactie(tranzactie);
+                Toast.makeText(getApplicationContext(),"Tranzacție ștearsă",Toast.LENGTH_LONG).show();
+                lv.invalidate();
+                populateLV();
+                return true;
+            }
+        });
+
+        //la click se editeaza
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent it = new Intent(getApplicationContext(),OperatiuneActivity.class);
+                it.putExtra("edit",tranzactii.get(i)); //se trimite elementul de pe pozitia selectata
+                it.putExtra("pozitie",i);
+                startActivityForResult(it,requestCodeEdit);
+            }
+        });
+
+        //set greeting
+        String userName = database.getUserDAO().findUserName(userId);
+        TextView greeting = findViewById(R.id.greeting);
+        greeting.setText("Salut, "+userName);
+    }
+
+    //primirea, adaugarea & editarea tranzactiilor din formular in lista
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if(requestCode==requestCodeAdaugaVenit){
+            if(resultCode == RESULT_OK) {
+                //primesc venitul
+                Tranzactie venit = data.getParcelableExtra("venit");
+                long id = database.getTranzactieDAO().insertTranzactie(venit);
+                int idTranz = (int)id;
+                venit.setId(idTranz);
+                lv.invalidate();
+                populateLV();
+                Toast.makeText(getApplicationContext(),"Ați introdus un venit",Toast.LENGTH_LONG).show();
+            }
+        }
+        else if(requestCode == requestCodeAdaugaCheltuiala){
+            if(resultCode == RESULT_OK) {
+                //primesc cheltuiala
+                Tranzactie cheltuiala = data.getParcelableExtra("cheltuiala");
+                long id = database.getTranzactieDAO().insertTranzactie(cheltuiala);
+                int idTranz = (int)id;
+                cheltuiala.setId(idTranz);
+                lv.invalidate();
+                populateLV();
+                Toast.makeText(getApplicationContext(),"Ați introdus o cheltuială",Toast.LENGTH_LONG).show();
+            }
+        }
+        else if(requestCode == requestCodeEdit){
+            if(resultCode == RESULT_OK) {
+                Tranzactie tranzactie = data.getParcelableExtra("editat");
+                database.getTranzactieDAO().updateTranzactie(tranzactie);
+                lv.invalidate();
+                populateLV();
+                Toast.makeText(getApplicationContext(),"Ați editat o tranzacție",Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
     //functii privind comportamentul fabs
     public void hideBtns() {
         fab.hide();
@@ -134,97 +230,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         balantaTV.setText(Double.toString(balanta));
     }
 
-    //popularea listview-ului
+    //popularea listview-ului & a statisticilor
     private void populateLV() {
         tranzactii = database.getTranzactieDAO().cautaTranzactiiDupaUserId(userId);
         calcSum();
         TranzactieAdapter adapter = new TranzactieAdapter(this,R.layout.tranzactie_layout,tranzactii);
         lv.setAdapter(adapter);
     }
-
-    //adauga meniul pentru darkmode
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.menu_darkmode,menu);
-        return true;
-    }
-
-    //handler element selectat din meniul pentru dark mode
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId()==R.id.item_darkmodeOn){
-            sharedPref.setDarkMode(true);
-            restartApp();
-        }
-        else if (item.getItemId() ==R.id.item_darkmodeOff) {
-            sharedPref.setDarkMode(false);
-            restartApp();
-        }
-        return true;
-    }
-    //pentru a aplica dark mode
-    public void restartApp() {
-        Intent it = new Intent(getApplicationContext(),MainActivity.class);
-        startActivity(it);
-        finish();
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        //dark mode before onCreate
-        sharedPref = new SharedPref(this);
-        if(sharedPref.loadDarkModeState()==true) {
-            setTheme(R.style.myDarkModeTheme);
-        }
-        else setTheme(R.style.myTheme);
-
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        //pt dialog
-        dialogExport = new Dialog(this);
-
-        //initializarea bazei de date la onCreate
-        database = Room.databaseBuilder(this,MoneyDatabase.class,"trial14").allowMainThreadQueries().build();
-
-        getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, new HomeFragment()).commit();
-        fab = findViewById(R.id.fab);
-        fabVenit = findViewById(R.id.fab_venit);
-        fabCheltuiala = findViewById(R.id.fab_cheltuiala);
-        configNavigation();
-        userId = sharedPref.loadCurrentUser();
-    }
-
-    //popularea listei se face doar dupa ce a fost primit fragmentul
-    @Override
-    protected void onStart() {
-        super.onStart();
-        lv = findViewById(R.id.listViewTranzactii);
-        populateLV();
-        //la actiunea de long click se deschide formular cu elementul selectat pentru a putea fi editat
-        lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Tranzactie tranzactie = tranzactii.get(i);
-                database.getTranzactieDAO().deleteTranzactie(tranzactie);
-                Toast.makeText(getApplicationContext(),"Tranzacție ștearsă",Toast.LENGTH_LONG).show();
-                lv.invalidate();
-                populateLV();
-                return true;
-            }
-        });
-        lv.setOnItemClickListener(new AdapterView.OnItemClickListener(){
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent it = new Intent(getApplicationContext(),OperatiuneActivity.class);
-                it.putExtra("edit",tranzactii.get(i)); //se trimite elementul de pe pozitia selectata
-                it.putExtra("pozitie",i);
-                startActivityForResult(it,requestCodeEdit);
-            }
-        });
-    }
-
 
     //configurarea meniului
     private void configNavigation() {
@@ -263,41 +275,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             it.putExtra("tip","adaugaVenit");
             closeFabs();
             startActivityForResult(it,requestCodeAdaugaVenit);
-        }
-    }
-
-    //primirea si adaugarea tranzactiilor din formular in lista
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if(requestCode==requestCodeAdaugaVenit){
-           if(resultCode == RESULT_OK) {
-               //primesc venitul
-               Tranzactie venit = data.getParcelableExtra("venit");
-               long id = database.getTranzactieDAO().insertTranzactie(venit);
-               int idTranz = (int)id;
-               venit.setId(idTranz);
-               lv.invalidate();
-               populateLV();
-           }
-        }
-        else if(requestCode == requestCodeAdaugaCheltuiala){
-            if(resultCode == RESULT_OK) {
-                //primesc cheltuiala
-                Tranzactie cheltuiala = data.getParcelableExtra("cheltuiala");
-                long id = database.getTranzactieDAO().insertTranzactie(cheltuiala);
-                int idTranz = (int)id;
-                cheltuiala.setId(idTranz);
-                lv.invalidate();
-                populateLV();
-            }
-        }
-        else if(requestCode == requestCodeEdit){
-            if(resultCode == RESULT_OK) {
-                Tranzactie tranzactie = data.getParcelableExtra("editat");
-                database.getTranzactieDAO().updateTranzactie(tranzactie);
-                lv.invalidate();
-                populateLV();
-            }
         }
     }
 
@@ -422,11 +399,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 dialogExport.show();
                 break;
             case R.id.nav_logout:
+                Toast.makeText(getApplicationContext(),"V-ați delogat",Toast.LENGTH_LONG).show();
                 sharedPref.setIsLogged(false);
                 Intent intentLogin = new Intent(getApplicationContext(), LoginActivity.class);
                 startActivity(intentLogin);
                 break;
             case R.id.nav_deleteUser:
+                sharedPref.setIsLogged(false);
                 User user = database.getUserDAO().findUserById(userId);
                 database.getUserDAO().deleteUser(user);
                 Toast.makeText(getApplicationContext(),"Ați renunțat la cont",Toast.LENGTH_LONG).show();

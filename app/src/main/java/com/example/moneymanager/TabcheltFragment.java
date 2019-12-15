@@ -19,11 +19,14 @@ import java.util.List;
 public class TabcheltFragment extends Fragment {
   List<String> categoriiCheltuieli;
   MoneyDatabase database;
+  SharedPref sharedPref;
   @Nullable
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-    database= Room.databaseBuilder(getContext(),MoneyDatabase.class,"trial14").allowMainThreadQueries().build();
-    categoriiCheltuieli = database.getCategorieDAO().selectCategoriiCheltuieli();
+    database= Room.databaseBuilder(getContext(),MoneyDatabase.class,"moneyManager").allowMainThreadQueries().build();
+    sharedPref = new SharedPref(getContext());
+    int user = sharedPref.loadCurrentUser();
+    categoriiCheltuieli = database.getCategorieDAO().selectCategoriiCheltuieli(user);
 
     View v = inflater.inflate(R.layout.fragment_tabchelt,container,false);
     ListView listView = v.findViewById(R.id.LVCategChelt);

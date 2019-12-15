@@ -23,7 +23,6 @@ public class TranzactieAdapter extends ArrayAdapter<Tranzactie> {
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        //object deoarece cheltuiala si venit sunt doua clase diferite, derivate din object -- maybe to be modified
         Tranzactie tranzactie = getItem(position);
         LayoutInflater inflater = LayoutInflater.from(getContext());
         View v = inflater.inflate(resursaID,null);

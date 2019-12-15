@@ -1,26 +1,23 @@
 package com.example.moneymanager;
 
 import androidx.room.Dao;
-import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
-import androidx.room.Update;
 
 import java.util.List;
 
 @Dao
 interface CategorieDAO {
-    //select categorii venituri
-    @Query("SELECT denumire FROM Categorii WHERE aditiva = 1")
-    List<String> selectCategoriiVenituri();
+    //select categorii venituri pt utilizatorul curent
+    @Query("SELECT denumire FROM Categorii WHERE aditiva = 1 AND idUserCateg = :idUserCateg")
+    List<String> selectCategoriiVenituri(int idUserCateg);
 
-    //select categorii cheltuieli
-    @Query("SELECT denumire FROM Categorii WHERE aditiva = 0")
-    List<String> selectCategoriiCheltuieli();
+    //select categorii cheltuieli pt utilizatorul curent
+    @Query("SELECT denumire FROM Categorii WHERE aditiva = 0 AND idUserCateg = :idUserCateg")
+    List<String> selectCategoriiCheltuieli(int idUserCateg);
 
     //insert categorie
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     long insertCategorie(Categorie categorie);
-
 }

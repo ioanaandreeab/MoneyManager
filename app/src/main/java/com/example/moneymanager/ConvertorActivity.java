@@ -32,6 +32,10 @@ public class ConvertorActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_convertor);
 
+        //bara de back
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        //afiseaza currencies disponibile din api
         getCurrencies currencies = new getCurrencies() {
             @Override
             protected void onPostExecute(List<String> strings) {
@@ -46,6 +50,7 @@ public class ConvertorActivity extends AppCompatActivity {
         currencies.execute("http://data.fixer.io/api/latest?access_key="+accessKey);
     }
 
+    //clasa Async pentru a extrage ratele valutare selectate de utilizator in conversie
     public class GetSelectedCurrency extends AsyncTask<String, Void, String>{
         @Override
         protected String doInBackground(String... strings) {
@@ -82,14 +87,15 @@ public class ConvertorActivity extends AppCompatActivity {
         }
     }
 
+    //metoda de conversie valutara
     public void convert(View view) {
         final double[] currencyFrom = new double[1];
         final double[] currencyTo = new double[1];
-        GetSelectedCurrency makeRequest=  new GetSelectedCurrency() {
+        GetSelectedCurrency getFrom=  new GetSelectedCurrency() {
             @Override
             protected void onPostExecute(String s) {
                 currencyFrom[0] = Double.parseDouble(s);
-                GetSelectedCurrency json = new GetSelectedCurrency() {
+                GetSelectedCurrency getTo= new GetSelectedCurrency() {
                     @Override
                     protected void onPostExecute(String s) {
                         currencyTo[0] = Double.parseDouble(s);
@@ -102,16 +108,16 @@ public class ConvertorActivity extends AppCompatActivity {
                 };
                 Spinner spinnerTo = findViewById(R.id.spinnerTo);
                 String to = spinnerTo.getSelectedItem().toString();
-                json.execute("http://data.fixer.io/api/latest?access_key=110e0c2f5b00078cff5261aeb8587ad6&symbols="+to);
+                getTo.execute("http://data.fixer.io/api/latest?access_key=110e0c2f5b00078cff5261aeb8587ad6&symbols="+to);
 
             }
         };
         Spinner spinnerFrom = findViewById(R.id.spinnerFrom);
         String from = spinnerFrom.getSelectedItem().toString();
-        makeRequest.execute("http://data.fixer.io/api/latest?access_key=110e0c2f5b00078cff5261aeb8587ad6&symbols="+from);
+        getFrom.execute("http://data.fixer.io/api/latest?access_key=110e0c2f5b00078cff5261aeb8587ad6&symbols="+from);
     }
 
-
+    //clasa Async ce extrage toate currencies disponibile
     public class getCurrencies extends AsyncTask<String, Void, List<String>> {
         @Override
         protected List<String> doInBackground(String... strings) {
@@ -151,9 +157,5 @@ public class ConvertorActivity extends AppCompatActivity {
             }
             return availableCurrencies;
         }
-    }
-
-    public void showCurrencies(View view) {
-
     }
 }

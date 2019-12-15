@@ -17,7 +17,7 @@ public class SplashScreen extends AppCompatActivity {
         sharedPref = new SharedPref(this);
         isLogged = sharedPref.loadIsLogged();
         //splash screenul este afisat o secunda, prin intermediul unui thread care "doarme"
-        //ulterior, portneste urmatoarea activitate - login
+        //ulterior, porneste urmatoarea activitate - login
         Thread myThread = new Thread(){
             @Override
             public void run() {

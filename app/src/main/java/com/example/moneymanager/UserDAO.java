@@ -25,6 +25,10 @@ public interface UserDAO {
     @Query("SELECT * FROM useri WHERE userId = :id LIMIT 1;")
     User findUserById(int id);
 
+    //get user name
+    @Query("SELECT prenume FROM useri WHERE userId = :id;")
+    String findUserName(int id);
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     long insertUser(User user);
 

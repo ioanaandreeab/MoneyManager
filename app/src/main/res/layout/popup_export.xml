@@ -21,14 +21,14 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Exportă raportul tranzacțiilor tale!"
+            android:text="@string/export_title"
             android:textStyle="bold"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="5dp"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Alege tipul fișierului"
+            android:text="@string/type_title"
             android:layout_marginTop="@dimen/fab_margin">
         </TextView>
         <RadioGroup
@@ -39,13 +39,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/txt"
-                android:text=".txt">
+                android:text="@string/txt">
             </RadioButton>
             <RadioButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/csv"
-                android:text=".csv">
+                android:text="@string/csv">
             </RadioButton>
         </RadioGroup>
     </LinearLayout>

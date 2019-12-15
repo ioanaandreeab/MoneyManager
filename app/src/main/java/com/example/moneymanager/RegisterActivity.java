@@ -10,25 +10,31 @@ import android.widget.Toast;
 
 public class RegisterActivity extends AppCompatActivity {
     private MoneyDatabase database;
+    private String mail;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-        database = Room.databaseBuilder(getApplicationContext(),MoneyDatabase.class,"trial14").allowMainThreadQueries().build();
+        database = Room.databaseBuilder(getApplicationContext(),MoneyDatabase.class,"moneyManager").allowMainThreadQueries().build();
+    }
 
-        //adaugare categorii prestabilite pt user
-        database.getCategorieDAO().insertCategorie(new Categorie(true,"Salariu"));
-        database.getCategorieDAO().insertCategorie(new Categorie(true,"Împrumuturi"));
-        database.getCategorieDAO().insertCategorie(new Categorie(true,"Cadouri"));
-        database.getCategorieDAO().insertCategorie(new Categorie(true,"Voucher"));
+    public void initializareCategoriiPtUtilizator() {
 
-        database.getCategorieDAO().insertCategorie(new Categorie(false,"Facturi"));
-        database.getCategorieDAO().insertCategorie(new Categorie(false,"Mâncare"));
-        database.getCategorieDAO().insertCategorie(new Categorie(false,"Transport"));
-        database.getCategorieDAO().insertCategorie(new Categorie(false,"Taxe"));
-        database.getCategorieDAO().insertCategorie(new Categorie(false,"Timp liber"));
-        database.getCategorieDAO().insertCategorie(new Categorie(false,"Educatie"));
+        //se ia id-ul utilizatorului introdus in bd
+        int idUser = database.getUserDAO().idUserMail(mail);
 
+        //adaugare categorii prestabilite pt user - se insereaza o singura data, la register
+        database.getCategorieDAO().insertCategorie(new Categorie(true,"Salariu",idUser));
+        database.getCategorieDAO().insertCategorie(new Categorie(true,"Împrumuturi",idUser));
+        database.getCategorieDAO().insertCategorie(new Categorie(true,"Cadouri",idUser));
+        database.getCategorieDAO().insertCategorie(new Categorie(true,"Voucher",idUser));
+
+        database.getCategorieDAO().insertCategorie(new Categorie(false,"Facturi",idUser));
+        database.getCategorieDAO().insertCategorie(new Categorie(false,"Mâncare",idUser));
+        database.getCategorieDAO().insertCategorie(new Categorie(false,"Transport",idUser));
+        database.getCategorieDAO().insertCategorie(new Categorie(false,"Taxe",idUser));
+        database.getCategorieDAO().insertCategorie(new Categorie(false,"Timp liber",idUser));
+        database.getCategorieDAO().insertCategorie(new Categorie(false,"Educatie",idUser));
     }
 
     public void cancel(View view) {
@@ -38,15 +44,18 @@ public class RegisterActivity extends AppCompatActivity {
     public void createUser(View view) {
         EditText etNume = findViewById(R.id.ETNume);
         String nume = etNume.getText().toString();
-        EditText etPreume = findViewById(R.id.ETPrenume);
-        String prenume = etNume.getText().toString();
+        EditText etPrenume = findViewById(R.id.ETPrenume);
+        String prenume = etPrenume.getText().toString();
         EditText etMail = findViewById(R.id.ETMail);
-        String mail = etNume.getText().toString();
+        mail = etMail.getText().toString();
         EditText etPass = findViewById(R.id.ETPass);
-        String pass = etNume.getText().toString();
+        String pass = etPass.getText().toString();
         User user = new User(mail,nume,prenume,pass,"",0);
         database.getUserDAO().insertUser(user);
         Toast.makeText(getApplicationContext(),"V-ați înregistrat cu succes!",Toast.LENGTH_LONG).show();
+
+        initializareCategoriiPtUtilizator();
+
         finish();
     }
 }
