@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".AddCategActivity"
-    android:background="@color/myLighterColor">
+    android:background="@color/myColorPrimary">
 
     <TextView
         android:id="@+id/titluAddCateg"
@@ -57,7 +57,9 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.546"
-        android:onClick="adaugaCategorie"/>
+        android:onClick="adaugaCategorie"
+        android:textColor="@android:color/white"
+        android:backgroundTint="@color/myColorPrimaryDark"/>
 
     <Button
         android:id="@+id/btnCancel"
@@ -70,5 +72,7 @@
         app:layout_constraintStart_toEndOf="@+id/btnOK"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.546"
-        android:onClick="metodaCancel"/>
+        android:onClick="metodaCancel"
+        android:textColor="@android:color/white"
+        android:backgroundTint="@color/myColorPrimaryDark"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

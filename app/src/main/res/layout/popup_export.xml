@@ -50,25 +50,26 @@
         </RadioGroup>
     </LinearLayout>
 
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="111dp"
         android:gravity="center"
         android:orientation="horizontal">
-
         <Button
             android:id="@+id/exportOK"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="25dp"
-            android:text="@string/ok" />
-
+            android:text="@string/ok"
+            android:textColor="@android:color/white"
+            android:backgroundTint="@color/myColorPrimaryDark"/>
         <Button
             android:id="@+id/exportCancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="25dp"
-            android:text="@string/cancel" />
+            android:text="@string/cancel"
+            android:textColor="@android:color/white"
+            android:backgroundTint="@color/myColorPrimaryDark"/>
     </LinearLayout>
 </LinearLayout>

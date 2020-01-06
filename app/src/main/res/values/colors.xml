@@ -3,9 +3,9 @@
   <color name="colorPrimary">#008577</color>
   <color name="colorPrimaryDark">#00574B</color>
   <color name="colorAccent">#D81B60</color>
-  <color name="myColorPrimaryDark">#201335</color>
-  <color name="myColorPrimary">#4F4789</color>
-  <color name="myLighterColor">#685fac</color>
-  <color name="myYellow">#f2d103</color>
-  <color name="darkModeBg">#282633</color>
+  <color name="myColorPrimaryDark">#2B3855</color>
+  <color name="myColorPrimary">#3E517A</color>
+  <color name="myLighterColor">#8394d9</color>
+  <color name="myLightBlue">#B08EA2</color>
+  <color name="bgColor">#E8EEF2</color>
 </resources>

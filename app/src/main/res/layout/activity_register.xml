@@ -60,12 +60,13 @@
 
     <TextView
         android:id="@+id/titluRegister"
-        android:layout_width="150dp"
-        android:layout_height="39dp"
+        android:layout_width="252dp"
+        android:layout_height="53dp"
         android:text="@string/registerTitle"
+        android:textSize="@dimen/titleSize"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.603"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.16" />
@@ -81,7 +82,9 @@
         app:layout_constraintHorizontal_bias="0.297"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.754" />
+        app:layout_constraintVertical_bias="0.754"
+        android:textColor="@android:color/white"
+        android:backgroundTint="@color/myColorPrimary"/>
 
     <Button
         android:id="@+id/Cancel"
@@ -94,7 +97,9 @@
         app:layout_constraintHorizontal_bias="0.684"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.754" />
+        app:layout_constraintVertical_bias="0.754"
+        android:textColor="@android:color/white"
+        android:backgroundTint="@color/myColorPrimary"/>
 
     <TextView
         android:id="@+id/textView3"

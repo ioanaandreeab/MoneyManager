@@ -7,7 +7,6 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
-import java.util.List;
 
 @Dao
 public interface UserDAO {
@@ -18,7 +17,7 @@ public interface UserDAO {
     int idUserMail(String mail);
 
     //select idUser dupa parola
-    @Query("SELECT userId FROM Useri WHERE email = :pass;")
+    @Query("SELECT userId FROM Useri WHERE pass = :pass;")
     int idUserPass(String pass);
 
     //get user by id

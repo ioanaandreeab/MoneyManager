@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/myLighterColor">
+    android:background="@color/myColorPrimary">
 
     <RatingBar
         android:id="@+id/ratingApp"
@@ -69,5 +69,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/etDetalii"
         app:layout_constraintVertical_bias="0.333"
-        android:onClick="addFeedback"/>
+        android:onClick="addFeedback"
+        android:textColor="@android:color/white"
+        android:backgroundTint="@color/myColorPrimaryDark" />
 </androidx.constraintlayout.widget.ConstraintLayout>

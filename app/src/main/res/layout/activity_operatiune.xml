@@ -36,7 +36,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/spinnerSelect"
-            android:spinnerMode="dropdown">
+            android:spinnerMode="dropdown"
+            style="@style/SpinnerCustomStyle">
         </Spinner>
       </LinearLayout>
       <LinearLayout
@@ -50,7 +51,7 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/ETvaloare"/>
+            android:id="@+id/ETvaloare" />
       </LinearLayout>
       <DatePicker
           android:layout_width="wrap_content"
@@ -67,13 +68,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/cashRB"
-            android:text="@string/cashLabel">
+            android:text="@string/cashLabel"
+            android:buttonTint="@color/myLightBlue">
         </RadioButton>
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/cardRB"
-            android:text="@string/cardLabel">
+            android:text="@string/cardLabel"
+            android:buttonTint="@color/myLightBlue">
         </RadioButton>
       </RadioGroup>
       <LinearLayout
@@ -85,14 +88,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/ok"
-            android:id="@+id/BtnIdOK">
+            android:id="@+id/BtnIdOK"
+            android:textColor="@android:color/white"
+            android:backgroundTint="@color/myColorPrimary">
         </Button>
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/cancel"
             android:id="@+id/BtnIdCancel"
-            android:onClick="cancelOperatiune"></Button>
+            android:onClick="cancelOperatiune"
+            android:textColor="@android:color/white"
+            android:backgroundTint="@color/myColorPrimary"></Button>
       </LinearLayout>
     </LinearLayout>
   </ScrollView>

@@ -62,4 +62,5 @@
     <string name="txt">.txt</string>
     <string name="csv">.csv</string>
     <string name="convertorTitle">Convertor valutar</string>
+    <string name="menu_stat">Statistici</string>
 </resources>

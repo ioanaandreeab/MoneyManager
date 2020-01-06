@@ -412,7 +412,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 intentLogin = new Intent(getApplicationContext(), LoginActivity.class);
                 startActivity(intentLogin);
                 break;
-            //pentru restul sectiunilor ce vor fi implementate in fazele urmatoare afisez un mesaj ce se afla in acelasi fragment
+            case R.id.nav_stats:
+                Intent intentStats = new Intent(getApplicationContext(), StatsActivity.class);
+                startActivity(intentStats);
+                break;
                 default:
                     getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, new HomeFragment()).commit();
                     onStart();
