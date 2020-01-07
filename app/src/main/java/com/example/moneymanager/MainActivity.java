@@ -44,6 +44,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.RadioButton;
@@ -109,7 +110,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         fabCheltuiala = findViewById(R.id.fab_cheltuiala);
         configNavigation();
         userId = sharedPref.loadCurrentUser();
-
     }
 
     //popularea listei se face doar dupa ce a fost primit fragmentul

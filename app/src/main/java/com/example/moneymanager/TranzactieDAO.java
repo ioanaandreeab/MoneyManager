@@ -28,6 +28,14 @@ public interface TranzactieDAO {
     @Query("SELECT SUM(valoare) FROM tranzactii where aditiva = 0 and idUserTranz= :idUserTranz;")
     double selectSumaCheltuieli(int idUserTranz);
 
+    //select tranzactii Cash
+    @Query("SELECT SUM(valoare) FROM tranzactii where natura='Cash' and idUserTranz= :idUserTranz;")
+    double selectSumaTranzactiiCash(int idUserTranz);
+
+    //select tranzactii Card
+    @Query("SELECT SUM(valoare) FROM tranzactii where natura='Card' and idUserTranz= :idUserTranz;")
+    double selectSumaTranzactiiCard(int idUserTranz);
+
 
     @Update(onConflict = OnConflictStrategy.IGNORE)
     void updateTranzactie(Tranzactie tranzactie);

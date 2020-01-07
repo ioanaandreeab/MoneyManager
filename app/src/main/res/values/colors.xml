@@ -8,4 +8,6 @@
   <color name="myLighterColor">#8394d9</color>
   <color name="myLightBlue">#B08EA2</color>
   <color name="bgColor">#E8EEF2</color>
+  <color name="myLightRed">#ffa8b7</color>
+  <color name="myLightGreen">#b7ffa8</color>
 </resources>

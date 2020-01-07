@@ -63,4 +63,7 @@
     <string name="csv">.csv</string>
     <string name="convertorTitle">Convertor valutar</string>
     <string name="menu_stat">Statistici</string>
+    <string name="statTitle">Statistici</string>
+    <string name="situatieBalantaText">Situația balanței dumneavoastră:</string>
+    <string name="statsFirebaseText">În medie, un utilizator al aplicației are în decursul unei luni:</string>
 </resources>
