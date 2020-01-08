@@ -28,13 +28,29 @@ public interface TranzactieDAO {
     @Query("SELECT SUM(valoare) FROM tranzactii where aditiva = 0 and idUserTranz= :idUserTranz;")
     double selectSumaCheltuieli(int idUserTranz);
 
-    //select tranzactii Cash
-    @Query("SELECT SUM(valoare) FROM tranzactii where natura='Cash' and idUserTranz= :idUserTranz;")
-    double selectSumaTranzactiiCash(int idUserTranz);
+    //select cheltuieli facturi
+    @Query("SELECT SUM(valoare) FROM tranzactii where categorie='Facturi' and idUserTranz= :idUserTranz;")
+    double selectCheltuieliFacturi(int idUserTranz);
 
-    //select tranzactii Card
-    @Query("SELECT SUM(valoare) FROM tranzactii where natura='Card' and idUserTranz= :idUserTranz;")
-    double selectSumaTranzactiiCard(int idUserTranz);
+    //select cheltuieli mancare
+    @Query("SELECT SUM(valoare) FROM tranzactii where categorie='Mâncare' and idUserTranz= :idUserTranz;")
+    double selectCheltuieliMancare(int idUserTranz);
+
+    //select cheltuieli transport
+    @Query("SELECT SUM(valoare) FROM tranzactii where categorie='Transport' and idUserTranz= :idUserTranz;")
+    double selectCheltuieliTransport(int idUserTranz);
+
+    //select cheltuieli taxe
+    @Query("SELECT SUM(valoare) FROM tranzactii where categorie='Taxe' and idUserTranz= :idUserTranz;")
+    double selectCheltuieliTaxe(int idUserTranz);
+
+    //select cheltuieli timp liber
+    @Query("SELECT SUM(valoare) FROM tranzactii where categorie='Timp liber' and idUserTranz= :idUserTranz;")
+    double selectCheltuieliTimpLiber(int idUserTranz);
+
+    //select cheltuieli educatie
+    @Query("SELECT SUM(valoare) FROM tranzactii where categorie='Educație' and idUserTranz= :idUserTranz;")
+    double selectCheltuieliEducatie(int idUserTranz);
 
 
     @Update(onConflict = OnConflictStrategy.IGNORE)

@@ -103,7 +103,7 @@
         android:layout_marginLeft="@dimen/fab_margin"
         android:layout_marginRight="@dimen/fab_margin"
         android:layout_height="800px"
-        android:id="@+id/ChartView"
+        android:id="@+id/PieChartView"
         android:orientation="horizontal"
         android:background="@drawable/background">
     </LinearLayout>
@@ -120,7 +120,7 @@
                 android:layout_marginRight="@dimen/fab_margin"
                 android:layout_width="match_parent"
                 android:layout_height="800px"
-                android:id="@+id/ChartCashCardView"
+                android:id="@+id/BarChartView"
                 android:orientation="horizontal"
                 android:background="@drawable/background">
             </LinearLayout>

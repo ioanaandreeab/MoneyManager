@@ -34,7 +34,7 @@ public class RegisterActivity extends AppCompatActivity {
         database.getCategorieDAO().insertCategorie(new Categorie(false,"Transport",idUser));
         database.getCategorieDAO().insertCategorie(new Categorie(false,"Taxe",idUser));
         database.getCategorieDAO().insertCategorie(new Categorie(false,"Timp liber",idUser));
-        database.getCategorieDAO().insertCategorie(new Categorie(false,"Educatie",idUser));
+        database.getCategorieDAO().insertCategorie(new Categorie(false,"Educație",idUser));
     }
 
     public void cancel(View view) {
