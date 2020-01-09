@@ -1,16 +1,24 @@
 package com.example.moneymanager;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.room.Room;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -26,7 +34,9 @@ import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class StatsActivity extends AppCompatActivity {
     private MoneyDatabase database;
@@ -46,13 +56,20 @@ public class StatsActivity extends AppCompatActivity {
     double cheltuieliMancare;
     double cheltuieliFacturi;
     double cheltuieliPredefinite;
+    Dialog dialogAddContributieStat;
     List<Double> cheltuieliPeCategorii;
     SharedPref sharedPref;
+    long nrInregistrari;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        sharedPref = new SharedPref(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stats);
+
+        //bara de back
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        //preluare utilizator curent
+        sharedPref = new SharedPref(this);
         int idUserCurent = sharedPref.loadCurrentUser();
         //preluare date din BD locala
         database = Room.databaseBuilder(this, MoneyDatabase.class,"moneyManager").allowMainThreadQueries().build();
@@ -102,6 +119,8 @@ public class StatsActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 //se preia colectia
                 DataSnapshot ds = dataSnapshot.child("user-data");
+                //iau numarul de inregistrari existente pentru a putea simula un autoincrement
+                nrInregistrari = ds.getChildrenCount();
                 //toate subnodurile din colectie -> lista de inregistrari privind informatiile despre utilizatori
                 Iterable<DataSnapshot> inregistrariDS = ds.getChildren();
                 //reinitializez lista la fiecare modificare
@@ -111,12 +130,12 @@ public class StatsActivity extends AppCompatActivity {
                 cheltSuma = 0;
                 for (DataSnapshot d : inregistrariDS) {
                     //ia valoarea pentru venit
-                    double venit = d.child("sumaVenit").getValue(Float.class);
+                    double venit = d.child("sumaVenit").getValue(Double.class);
                     venSuma+=venit;
                     venituri.add(venit);
                     //ia valoarea pentru cheltuieli
-                    double cheltuiala = d.child("sumaChelt").getValue(Float.class);
-                    cheltSuma+=cheltuiala;
+                    double cheltuiala = d.child("sumaChelt").getValue(Double.class);
+                    cheltSuma += cheltuiala;
                     cheltuieli.add(cheltuiala);
                 }
                 venMed = venSuma/venituri.size();
@@ -135,15 +154,66 @@ public class StatsActivity extends AppCompatActivity {
         });
     }
 
-    /*public void metodaInserareFirebase(View view) {
-        Cadou cadou = new Cadou(4,45,true,"jucarie","Ioana");
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        //asta e nodul parinte
-        DatabaseReference myRef = database.getReference("cadouri");
-        //nod pentru fiecare cadou - identificat unic
-        DatabaseReference nodCadou = myRef.child("C-"+cadou.getId());
-        nodCadou.setValue(cadou);
-    }*/
+    //pentru inserare in Firebase
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflaterContributieStat = getMenuInflater();
+        menuInflaterContributieStat.inflate(R.menu.menu_contribuie_stat, menu);
+        return true;
+    }
+
+    void popupAddContributieHandler(){
+        TextView close = dialogAddContributieStat.findViewById(R.id.txtcloseStat);
+        close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialogAddContributieStat.dismiss();
+            }
+        });
+        Button closebtn = dialogAddContributieStat.findViewById(R.id.statCancel);
+        closebtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialogAddContributieStat.dismiss();
+            }
+        });
+        Button okBtn = dialogAddContributieStat.findViewById(R.id.statOK);
+        okBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                EditText ETSumaCheltLunare = dialogAddContributieStat.findViewById(R.id.ETCheltuieliLunare);
+                double cheltuieliLunare = Double.parseDouble(ETSumaCheltLunare.getText().toString());
+                EditText ETSumaVenLunare = dialogAddContributieStat.findViewById(R.id.ETVenituriLunare);
+                double venituriLunare = Double.parseDouble(ETSumaVenLunare.getText().toString());
+                //inserare in Firebase
+                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                //nodul parinte - colectia
+                DatabaseReference myRef = database.getReference("user-data");
+
+                DatabaseReference nodInregistrareNoua = myRef.child("U"+(nrInregistrari+1));
+                //inserez ambele valori simultan pentru a evita null pointer - ondatachange e fired de fiecare data cand se schimba o valoare
+                Map<String, Double> inregistrareNoua = new HashMap<>();
+                inregistrareNoua.put("sumaChelt", cheltuieliLunare);
+                inregistrareNoua.put("sumaVenit",venituriLunare);
+                nodInregistrareNoua.setValue(inregistrareNoua);
+                Toast.makeText(getApplicationContext(),"Mulțumim pentru contribuție!",Toast.LENGTH_LONG).show();
+                dialogAddContributieStat.dismiss();
+            }
+        });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if(item.getItemId()==R.id.addContributieStat){
+            dialogAddContributieStat = new Dialog(this);
+            //prelucrarile de la export
+            dialogAddContributieStat.setContentView(R.layout.popup_add_contributie_stat);
+            popupAddContributieHandler();
+            dialogAddContributieStat.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            dialogAddContributieStat.show();
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }
 
 //clase pentru desenare
@@ -210,49 +280,49 @@ class BarChart extends View {
         canvas.drawRect(800,50,750,100,pensula);
         pensula.setColor(Color.WHITE);
         pensula.setTextSize(30);
-        canvas.drawText("Educație",820,75,pensula);
+        canvas.drawText("Educație",820,80,pensula);
 
         //facturi
         pensula.setColor(Color.rgb(25*1,36*1,191));
         canvas.drawRect(800,110,750,160,pensula);
         pensula.setColor(Color.WHITE);
         pensula.setTextSize(30);
-        canvas.drawText("Facturi",820,135,pensula);
+        canvas.drawText("Facturi",820,140,pensula);
 
         //mancare
         pensula.setColor(Color.rgb(25*2,36*2,191));
         canvas.drawRect(800,170,750,220,pensula);
         pensula.setColor(Color.WHITE);
         pensula.setTextSize(30);
-        canvas.drawText("Mâncare",820,195,pensula);
+        canvas.drawText("Mâncare",820,200,pensula);
 
         //taxe
         pensula.setColor(Color.rgb(25*3,36*3,191));
         canvas.drawRect(800,230,750,280,pensula);
         pensula.setColor(Color.WHITE);
         pensula.setTextSize(30);
-        canvas.drawText("Taxe",820,255,pensula);
+        canvas.drawText("Taxe",820,260,pensula);
 
         //timp liber
         pensula.setColor(Color.rgb(25*4%255,36*4%255,191));
         canvas.drawRect(800,290,750,340,pensula);
         pensula.setColor(Color.WHITE);
         pensula.setTextSize(30);
-        canvas.drawText("Timp liber",820,315,pensula);
+        canvas.drawText("Timp liber",820,320,pensula);
 
         //transport
         pensula.setColor(Color.rgb(25*5%255,36*5%255,191));
         canvas.drawRect(800,350,750,400,pensula);
         pensula.setColor(Color.WHITE);
         pensula.setTextSize(30);
-        canvas.drawText("Transport",820,375,pensula);
+        canvas.drawText("Transport",820,380,pensula);
 
         //altele
         pensula.setColor(Color.rgb(25*6%255,36*6%255,191));
         canvas.drawRect(800,410,750,460,pensula);
         pensula.setColor(Color.WHITE);
         pensula.setTextSize(30);
-        canvas.drawText("Altele",820,435,pensula);
+        canvas.drawText("Altele",820,445,pensula);
     }
 }
 

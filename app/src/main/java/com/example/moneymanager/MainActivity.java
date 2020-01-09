@@ -402,6 +402,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Toast.makeText(getApplicationContext(),"V-ați delogat",Toast.LENGTH_LONG).show();
                 sharedPref.setIsLogged(false);
                 Intent intentLogin = new Intent(getApplicationContext(), LoginActivity.class);
+                finish();
                 startActivity(intentLogin);
                 break;
             case R.id.nav_deleteUser:
@@ -410,11 +411,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 database.getUserDAO().deleteUser(user);
                 Toast.makeText(getApplicationContext(),"Ați renunțat la cont",Toast.LENGTH_LONG).show();
                 intentLogin = new Intent(getApplicationContext(), LoginActivity.class);
+                finish();
                 startActivity(intentLogin);
                 break;
             case R.id.nav_stats:
                 Intent intentStats = new Intent(getApplicationContext(), StatsActivity.class);
                 startActivity(intentStats);
+                break;
+            case R.id.nav_contact:
+                Intent intentContact = new Intent(getApplicationContext(), ContactActivity.class);
+                startActivity(intentContact);
                 break;
                 default:
                     getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, new HomeFragment()).commit();
@@ -436,5 +442,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         user.setRating_text(detalii);
         database.getUserDAO().updateUser(user);
         Toast.makeText(this,"Feedback-ul dumneavoastră a fost înregistrat! Mulțumim!",Toast.LENGTH_LONG).show();
+        getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, new HomeFragment()).commit();
+        onStart();
+        showBtns();
     }
 }

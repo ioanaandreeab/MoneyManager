@@ -110,7 +110,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Se pare că în ceea ce privește tranzacțiile, preferați:"
+        android:text="@string/textBarChart"
         android:paddingTop="@dimen/fab_margin"
         android:paddingLeft="@dimen/fab_margin_half"
         android:textStyle="bold">

@@ -60,8 +60,8 @@
 
     <TextView
         android:id="@+id/titluRegister"
-        android:layout_width="252dp"
-        android:layout_height="53dp"
+        android:layout_width="253dp"
+        android:layout_height="37dp"
         android:text="@string/registerTitle"
         android:textSize="@dimen/titleSize"
         app:layout_constraintBottom_toBottomOf="parent"

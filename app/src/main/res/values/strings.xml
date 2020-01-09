@@ -66,4 +66,7 @@
     <string name="statTitle">Statistici</string>
     <string name="situatieBalantaText">Situația balanței dumneavoastră:</string>
     <string name="statsFirebaseText">În medie, un utilizator al aplicației are în decursul unei luni:</string>
+    <string name="textBarChart">În ceea ce privește cheltuielile dumneavoastră, situația este următoarea:</string>
+    <string name="title_activity_contact">Contact</string>
+    <string name="menu_firebase">Contribuie la statistică!</string>
 </resources>
