@@ -10,7 +10,10 @@
 	- la longpress se șterge o tranzacție din listă;
 
 - În cadrul meniului mai există următoarele secțiuni:
- - **Chart** - reprezentări grafice - urmează a fi implementate în următoarele faze
+ - **Convertor valutar** - integrare cu API-ul [Fixer.io](https://fixer.io/documentation) - conversie valutară dintr-o monedă în alta
+ - **Statistici** 
+   - reprezentări grafice - situația balanței reprezentată printr-un pie chart și cheltuielile pe categorii, prin bar chart
+   - integrare cu FireBase - utilizatorul poate introduce date despre cheltuielile și veniturile sale lunare și i se afișează date despre utilizatorul mediu al aplicației
  - **Categorii** 
    - categoriile de venituri și cheltuieli existente; fiecare user primește la înregistrare un set de categorii predefinite, la care se mai pot adăuga altele, după preferință
    - la apăsarea butonului adaugă categorie se va deschide un formular, în funcție de natura tranzacției;
@@ -19,7 +22,9 @@
  - **Exportă** - opțiuni de export al datelor
 	 - popup screen
 	 - utilizatorul alege din cele două formate; se va exporta un raport al tuturor tranzacțiilor utilizatorului
- - **Contact** - integrare Google Maps - urmează a fi implementată în următoarele faze
+ - **Contact** - integrare Google Maps - se afișează un pin pentru sediul fictiv al companiei Money Manager
  - **Rate the app** 
 	 - posibilitate rating & introducere feedback; 
 	 - în această secțiune se face update asupra datelor utilizatorului;
+ - **Deconectează-te**
+ - **Șterge contul**
